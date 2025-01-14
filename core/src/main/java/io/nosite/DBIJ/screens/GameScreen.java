@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -59,7 +60,7 @@ public class GameScreen implements Screen {
         platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 35, 200));
 
         float nextY = 400;
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             int numSections = 3;
             float sectionWidth = platformSpawnAreaWidth / numSections;
             int randomSection = MathUtils.random(numSections - 1);
@@ -67,9 +68,9 @@ public class GameScreen implements Screen {
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
             int platformType = MathUtils.random(100);
 
-            if(platformType < 15) {  // 15% Chance für bewegende Plattform
+            if (platformType < 15) {  // 15% Chance für bewegende Plattform
                 platforms.add(new MovingPlatform(randomX, nextY));
-            } else if(platformType < 30) {  // 15% Chance für zerbrechliche Plattform
+            } else if (platformType < 30) {  // 15% Chance für zerbrechliche Plattform
                 platforms.add(new BreakablePlatform(randomX, nextY));
             } else {  // 70% Chance für normale Plattform
                 platforms.add(new Platform(randomX, nextY));
@@ -93,19 +94,15 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+        // Hintergrund zeichnen
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-
-        // Berechne die Basis-Y-Position basierend auf der Kamera
-        float baseY = camera.position.y - viewport.getWorldHeight()/2;
-        // Berechne den Offset für das nahtlose Scrollen
+        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
         float offsetY = baseY % bgHeight;
-
-        // Zeichne mehrere Hintergründe übereinander
-        for(int i = -1; i < 2; i++) {
+        for (int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth()/2,
+                camera.position.x - viewport.getWorldWidth() / 2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
@@ -113,48 +110,41 @@ public class GameScreen implements Screen {
         batch.end();
 
         // Spiellogik
-        player.update(delta, platforms);
-        highscore = Math.max(highscore, player.getPosition().y);
+        if (!gameOver) {
+            player.update(delta, platforms);
+            highscore = Math.max(highscore, player.getPosition().y);
 
-        // Game Over Check
-        if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
-            gameOver = true;
-        }
-
-        // Wenn Game Over, Spiel neu starten bei Leertaste
-        if (gameOver) {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                resetGame();
+            // Game Over Check
+            if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
+                gameOver = true;
             }
-        }
 
-        // Kamera folgt dem Spieler nur nach oben
-        if (player.getPosition().y > camera.position.y) {
-            camera.position.y = player.getPosition().y;
-            camera.update();
-        }
-        updatePlatforms();
+            // Kamera folgt dem Spieler nur nach oben
+            if (player.getPosition().y > camera.position.y) {
+                camera.position.y = player.getPosition().y;
+                camera.update();
+            }
+            updatePlatforms();
 
-        for(Platform platform : platforms) {
-            if(platform instanceof MovingPlatform) {
-                ((MovingPlatform) platform).update(delta);
+            for (Platform platform : platforms) {
+                if (platform instanceof MovingPlatform) {
+                    ((MovingPlatform) platform).update(delta);
+                }
             }
         }
 
         // Ränder zeichnen
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
-        // Linker Rand
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth()/2,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x - viewport.getWorldWidth() / 2,
+            camera.position.y - viewport.getWorldHeight() / 2,
             40,
             viewport.getWorldHeight()
         );
-        // Rechter Rand
         shapeRenderer.rect(
-            camera.position.x + viewport.getWorldWidth()/2 - 40,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x + viewport.getWorldWidth() / 2 - 40,
+            camera.position.y - viewport.getWorldHeight() / 2,
             40,
             viewport.getWorldHeight()
         );
@@ -168,23 +158,55 @@ public class GameScreen implements Screen {
         player.render(shapeRenderer);
         shapeRenderer.end();
 
-        // UI und Score rendern
+        // Score rendern
         batch.begin();
-
         font.getData().setScale(1.0f);
-        font.draw(batch, "Score: " + (int)(highscore/100),
-            camera.position.x - viewport.getWorldWidth()/2 + 20,
-            camera.position.y + viewport.getWorldHeight()/2 - 20);
-
-        if(gameOver) {
-            font.getData().setScale(1.0f);
-            font.draw(batch, "Game Over! Press SPACE to restart",
-                camera.position.x - 100,
-                camera.position.y);
-        }
-        font.getData().setScale(1.0f);
-
+        font.draw(batch, "Score: " + (int) (highscore / 100),
+            camera.position.x - viewport.getWorldWidth() / 2 + 20,
+            camera.position.y + viewport.getWorldHeight() / 2 - 20);
         batch.end();
+
+        // Game Over Screen
+        if (gameOver) {
+            // Wenn Space gedrückt, neues Spiel starten
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                resetGame();
+                return;
+            }
+
+            // Halbtransparenter schwarzer Hintergrund
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 0, 0, 0.8f);
+            shapeRenderer.rect(
+                camera.position.x - viewport.getWorldWidth() / 2,
+                camera.position.y - viewport.getWorldHeight() / 2,
+                viewport.getWorldWidth(),
+                viewport.getWorldHeight()
+            );
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+
+            // Game Over Text
+            batch.begin();
+            // Game Over Text zentriert
+            font.getData().setScale(2.0f);
+            String gameOverText = "GAME OVER";
+            GlyphLayout glyphLayout = new GlyphLayout();
+            glyphLayout.setText(font, gameOverText);
+            float gameOverX = camera.position.x - glyphLayout.width / 2;
+            float gameOverY = camera.position.y + 50;
+            font.draw(batch, gameOverText, gameOverX, gameOverY);
+
+            // Neustart Text zentriert
+            font.getData().setScale(1.5f);
+            String restartText = "Drücke SPACE für neues Spiel";
+            glyphLayout.setText(font, restartText);
+            float restartX = camera.position.x - glyphLayout.width / 2;
+            float restartY = camera.position.y - 50;
+            font.draw(batch, restartText, restartX, restartY);
+            batch.end();
+        }
     }
 
     private void resetGame() {
@@ -200,7 +222,7 @@ public class GameScreen implements Screen {
         platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 35, 200));
 
         float nextY = 400;
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             int numSections = 3;
             float sectionWidth = platformSpawnAreaWidth / numSections;
             int randomSection = MathUtils.random(numSections - 1);
@@ -208,9 +230,9 @@ public class GameScreen implements Screen {
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
             int platformType = MathUtils.random(100);
-            if(platformType < 15) {  // 15% Chance für bewegende Plattform
+            if (platformType < 15) {  // 15% Chance für bewegende Plattform
                 platforms.add(new MovingPlatform(randomX, nextY));
-            } else if(platformType < 30) {  // 15% Chance für zerbrechliche Plattform
+            } else if (platformType < 30) {  // 15% Chance für zerbrechliche Plattform
                 platforms.add(new BreakablePlatform(randomX, nextY));
             } else {  // 70% Chance für normale Plattform
                 platforms.add(new Platform(randomX, nextY));
@@ -248,9 +270,9 @@ public class GameScreen implements Screen {
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
             int platformType = MathUtils.random(100);
-            if(platformType < 15) {
+            if (platformType < 15) {
                 platforms.add(new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
-            } else if(platformType < 30) {
+            } else if (platformType < 30) {
                 platforms.add(new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
             } else {
                 platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
@@ -279,6 +301,7 @@ public class GameScreen implements Screen {
     public void hide() {
 
     }
+
     @Override
     public void dispose() {
         shapeRenderer.dispose();

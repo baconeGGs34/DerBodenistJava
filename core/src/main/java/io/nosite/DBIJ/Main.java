@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.nosite.DBIJ.screens.GameScreen;
+import io.nosite.DBIJ.screens.MenuScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -13,7 +14,8 @@ public class Main extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        setScreen(new GameScreen());  // Startet das Spiel mit dem GameScreen
+//        setScreen(new GameScreen());  // Startet das Spiel mit dem GameScreen
+        setScreen(new MenuScreen());
     }
 
     @Override
