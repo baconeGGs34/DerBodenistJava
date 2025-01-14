@@ -16,6 +16,8 @@ import io.nosite.DBIJ.entities.Platform;
 import io.nosite.DBIJ.entities.Player;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 
@@ -31,6 +33,8 @@ public class GameScreen implements Screen {
     private static final float GAME_OVER_THRESHOLD = 500;  // Wie weit der Spieler fallen darf
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
+    private Texture backgroundTexture;
+    private TextureRegion backgroundRegion;
 
     @Override
     public void show() {
@@ -42,6 +46,9 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(2.0f);
+// Statt backgroundRegion:
+        backgroundTexture = new Texture(Gdx.files.internal("images/bg.jpg"));
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
@@ -80,6 +87,25 @@ public class GameScreen implements Screen {
         // SpriteBatch mit Kamera-Koordinaten konfigurieren
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+        float bgHeight = backgroundTexture.getHeight();
+
+        // Berechne die Basis-Y-Position basierend auf der Kamera
+        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        // Berechne den Offset für das nahtlose Scrollen
+        float offsetY = baseY % bgHeight;
+
+        // Zeichne mehrere Hintergründe übereinander
+        for(int i = -1; i < 2; i++) {
+            float y = baseY - offsetY + (i * bgHeight);
+            batch.draw(backgroundTexture,
+                camera.position.x - viewport.getWorldWidth()/2,
+                y,
+                viewport.getWorldWidth(),
+                bgHeight);
+        }
+        batch.end();
 
         // Spiellogik
         player.update(delta, platforms);
@@ -139,6 +165,7 @@ public class GameScreen implements Screen {
 
         // UI und Score rendern
         batch.begin();
+
         font.getData().setScale(2.0f);
         font.draw(batch, "Score: " + (int)(highscore/100),
             camera.position.x - viewport.getWorldWidth()/2 + 20,
@@ -151,6 +178,7 @@ public class GameScreen implements Screen {
                 camera.position.y);
         }
         font.getData().setScale(1.0f);
+
         batch.end();
     }
 
@@ -240,5 +268,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();  // Font aufräumen
+        backgroundTexture.dispose();
     }
 }

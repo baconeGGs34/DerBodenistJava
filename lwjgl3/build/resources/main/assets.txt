@@ -1,1 +1,3 @@
 .gitkeep
+images/bg.jpg
+images/bg3.jpg
