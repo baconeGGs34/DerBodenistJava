@@ -35,9 +35,9 @@ public class Player {
 
     public void update(float delta, Array<Platform> platforms) {
         // Horizontale Bewegung durch Tastatur
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
             velocity.x = -MOVEMENT_SPEED;
-        } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             velocity.x = MOVEMENT_SPEED;
         } else {
             velocity.x = 0;

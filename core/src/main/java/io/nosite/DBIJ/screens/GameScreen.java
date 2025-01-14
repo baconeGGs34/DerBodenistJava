@@ -43,10 +43,11 @@ public class GameScreen implements Screen {
         player = new Player(MIN_WORLD_WIDTH / 2, 400);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
+
         font = new BitmapFont();
         font.setColor(Color.WHITE);
-        font.getData().setScale(2.0f);
-// Statt backgroundRegion:
+        font.getData().setScale(1.0f);
+
         backgroundTexture = new Texture(Gdx.files.internal("images/bg.jpg"));
         backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
@@ -166,13 +167,13 @@ public class GameScreen implements Screen {
         // UI und Score rendern
         batch.begin();
 
-        font.getData().setScale(2.0f);
+        font.getData().setScale(1.0f);
         font.draw(batch, "Score: " + (int)(highscore/100),
             camera.position.x - viewport.getWorldWidth()/2 + 20,
             camera.position.y + viewport.getWorldHeight()/2 - 20);
 
         if(gameOver) {
-            font.getData().setScale(2.0f);
+            font.getData().setScale(1.0f);
             font.draw(batch, "Game Over! Press SPACE to restart",
                 camera.position.x - 100,
                 camera.position.y);
