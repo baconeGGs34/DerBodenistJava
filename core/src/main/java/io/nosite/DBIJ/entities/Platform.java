@@ -10,8 +10,8 @@ public class Platform {
     private Rectangle bounds;
     private ShapeRenderer shapeRenderer;
 
-    private static final float PLATFORM_WIDTH = 70;
-    private static final float PLATFORM_HEIGHT = 10;
+    private static final float PLATFORM_WIDTH = 60;
+    private static final float PLATFORM_HEIGHT = 8;
 
     public Platform(float x, float y) {
         // Erstellt ein Rechteck an der gegebenen Position mit fester Größe

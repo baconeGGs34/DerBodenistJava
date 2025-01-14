@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
     private Array<Platform> platforms;
     private float highscore = 0;  // Höchste erreichte Position
     private boolean gameOver = false;  // Spielstatus
-    private static final float GAME_OVER_THRESHOLD = 1000;  // Wie weit der Spieler fallen darf
+    private static final float GAME_OVER_THRESHOLD = 500;  // Wie weit der Spieler fallen darf
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
 
@@ -42,17 +42,20 @@ public class GameScreen implements Screen {
         font.setColor(Color.WHITE);
         font.getData().setScale(2.0f);
 
-        // Hier den festen Randabstand verwenden
-        float margin = 40f;  // Fester Randabstand von 40px
-        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;  // 70 ist PLATFORM_WIDTH
+        float margin = 40f;
+        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
 
         platforms = new Array<>();
-        // Erste Platform in der Mitte
-        platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 60, 200));
+        platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 35, 200));
 
         float nextY = 400;
         for(int i = 0; i < 10; i++) {
-            float randomX = margin + MathUtils.random(platformSpawnAreaWidth);
+            int numSections = 3;
+            float sectionWidth = platformSpawnAreaWidth / numSections;
+            int randomSection = MathUtils.random(numSections - 1);
+            float randomOffset = MathUtils.random(sectionWidth * 0.8f);
+            float randomX = margin + (randomSection * sectionWidth) + randomOffset;
+
             platforms.add(new Platform(randomX, nextY));
             nextY += MathUtils.random(110, 150);
         }
@@ -95,7 +98,26 @@ public class GameScreen implements Screen {
         }
         updatePlatforms();
 
-        // Formen rendern
+        // Ränder zeichnen
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.DARK_GRAY);
+        // Linker Rand
+        shapeRenderer.rect(
+            camera.position.x - viewport.getWorldWidth()/2,
+            camera.position.y - viewport.getWorldHeight()/2,
+            40,
+            viewport.getWorldHeight()
+        );
+        // Rechter Rand
+        shapeRenderer.rect(
+            camera.position.x + viewport.getWorldWidth()/2 - 40,
+            camera.position.y - viewport.getWorldHeight()/2,
+            40,
+            viewport.getWorldHeight()
+        );
+        shapeRenderer.end();
+
+        // Formen rendern (Plattformen und Player)
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Platform platform : platforms) {
             platform.render(shapeRenderer);
@@ -103,7 +125,7 @@ public class GameScreen implements Screen {
         player.render(shapeRenderer);
         shapeRenderer.end();
 
-// UI und Score rendern
+        // UI und Score rendern
         batch.begin();
         font.getData().setScale(2.0f);
         font.draw(batch, "Score: " + (int)(highscore/100),
@@ -126,27 +148,29 @@ public class GameScreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
         player = new Player(MIN_WORLD_WIDTH / 2, 400);
 
-        // Plattform-Generierung mit Margin
-        float margin = 40f;  // Fester Randabstand von 40px
-        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;  // 70 ist PLATFORM_WIDTH
+        float margin = 40f;
+        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
 
         platforms.clear();
-        platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 60, 200));
+        platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 35, 200));
 
         float nextY = 400;
         for(int i = 0; i < 10; i++) {
-            float randomX = margin + MathUtils.random(platformSpawnAreaWidth);
+            int numSections = 3;
+            float sectionWidth = platformSpawnAreaWidth / numSections;
+            int randomSection = MathUtils.random(numSections - 1);
+            float randomOffset = MathUtils.random(sectionWidth * 0.8f);
+            float randomX = margin + (randomSection * sectionWidth) + randomOffset;
+
             platforms.add(new Platform(randomX, nextY));
             nextY += MathUtils.random(110, 150);
         }
     }
 
     private void updatePlatforms() {
+        float margin = 40f;
+        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
 
-        float margin = 40f;  // Fester Randabstand von 40px
-        float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;  // 70 ist PLATFORM_WIDTH
-
-        // Lösche Plattformen die weit unter der Kamera sind
         for (int i = platforms.size - 1; i >= 0; i--) {
             Platform platform = platforms.get(i);
             if (platform.getBounds().y < camera.position.y - viewport.getWorldHeight()) {
@@ -154,15 +178,18 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Füge neue Plattformen hinzu wenn wir nach oben Platz haben
         float highestPlatformY = 0;
         for (Platform platform : platforms) {
             highestPlatformY = Math.max(highestPlatformY, platform.getBounds().y);
         }
 
-        // Generiere neue Plattformen wenn wir weniger als eine Bildschirmhöhe über der höchsten haben
         while (highestPlatformY < camera.position.y + viewport.getWorldHeight()) {
-            float randomX = margin + MathUtils.random(platformSpawnAreaWidth);
+            int numSections = 3;
+            float sectionWidth = platformSpawnAreaWidth / numSections;
+            int randomSection = MathUtils.random(numSections - 1);
+            float randomOffset = MathUtils.random(sectionWidth * 0.8f);
+            float randomX = margin + (randomSection * sectionWidth) + randomOffset;
+
             platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
             highestPlatformY += MathUtils.random(110, 150);
         }
