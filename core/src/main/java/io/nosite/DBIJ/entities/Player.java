@@ -64,14 +64,21 @@ public class Player {
 
         // Nur wenn wir nach unten fallen
         if(velocity.y < 0) {
-            // Überprüfe jede Platform
             for(Platform platform : platforms) {
                 if(bounds.overlaps(platform.getBounds())) {
-                    // Kollision! Setze Position auf Platform-Oberkante
-                    position.y = platform.getBounds().y + platform.getBounds().height;
-                    // Nach oben springen
-                    velocity.y = JUMP_VELOCITY;
-                    break;  // Eine Kollision reicht
+                    // Für zerbrechliche Plattformen
+                    if(platform instanceof BreakablePlatform) {
+                        if(((BreakablePlatform) platform).isActive()) {
+                            position.y = platform.getBounds().y + platform.getBounds().height;
+                            velocity.y = JUMP_VELOCITY;
+                            ((BreakablePlatform) platform).breakPlatform();
+                        }
+                    } else {
+                        // Normale Plattform-Kollision
+                        position.y = platform.getBounds().y + platform.getBounds().height;
+                        velocity.y = JUMP_VELOCITY;
+                    }
+                    break;
                 }
             }
         }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
+import io.nosite.DBIJ.entities.BreakablePlatform;
 import io.nosite.DBIJ.entities.MovingPlatform;
 import io.nosite.DBIJ.entities.Platform;
 import io.nosite.DBIJ.entities.Player;
@@ -30,7 +31,7 @@ public class GameScreen implements Screen {
     private Array<Platform> platforms;
     private float highscore = 0;  // Höchste erreichte Position
     private boolean gameOver = false;  // Spielstatus
-    private static final float GAME_OVER_THRESHOLD = 500;  // Wie weit der Spieler fallen darf
+    private static final float GAME_OVER_THRESHOLD = 450;  // Wie weit der Spieler fallen darf
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
     private Texture backgroundTexture;
@@ -64,10 +65,13 @@ public class GameScreen implements Screen {
             int randomSection = MathUtils.random(numSections - 1);
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
+            int platformType = MathUtils.random(100);
 
-            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+            if(platformType < 15) {  // 15% Chance für bewegende Plattform
                 platforms.add(new MovingPlatform(randomX, nextY));
-            } else {
+            } else if(platformType < 30) {  // 15% Chance für zerbrechliche Plattform
+                platforms.add(new BreakablePlatform(randomX, nextY));
+            } else {  // 70% Chance für normale Plattform
                 platforms.add(new Platform(randomX, nextY));
             }
 
@@ -203,9 +207,12 @@ public class GameScreen implements Screen {
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
-            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+            int platformType = MathUtils.random(100);
+            if(platformType < 15) {  // 15% Chance für bewegende Plattform
                 platforms.add(new MovingPlatform(randomX, nextY));
-            } else {
+            } else if(platformType < 30) {  // 15% Chance für zerbrechliche Plattform
+                platforms.add(new BreakablePlatform(randomX, nextY));
+            } else {  // 70% Chance für normale Plattform
                 platforms.add(new Platform(randomX, nextY));
             }
 
@@ -217,18 +224,22 @@ public class GameScreen implements Screen {
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
 
+        // Alte Plattformen entfernen
         for (int i = platforms.size - 1; i >= 0; i--) {
             Platform platform = platforms.get(i);
-            if (platform.getBounds().y < camera.position.y - viewport.getWorldHeight()) {
+            if (platform.getBounds().y < camera.position.y - viewport.getWorldHeight() ||
+                (platform instanceof BreakablePlatform && !((BreakablePlatform) platform).isActive())) {
                 platforms.removeIndex(i);
             }
         }
 
+        // Höchste Plattform finden
         float highestPlatformY = 0;
         for (Platform platform : platforms) {
             highestPlatformY = Math.max(highestPlatformY, platform.getBounds().y);
         }
 
+        // Neue Plattformen generieren
         while (highestPlatformY < camera.position.y + viewport.getWorldHeight()) {
             int numSections = 3;
             float sectionWidth = platformSpawnAreaWidth / numSections;
@@ -236,8 +247,11 @@ public class GameScreen implements Screen {
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
-            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+            int platformType = MathUtils.random(100);
+            if(platformType < 15) {
                 platforms.add(new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+            } else if(platformType < 30) {
+                platforms.add(new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
             } else {
                 platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
             }
