@@ -17,7 +17,7 @@ public class Player {
     private float height;         // Höhe des Spielers für Kollisionen
     private static final float JUMP_VELOCITY = 1600;    // Wie hoch der Spieler springt
     private static final float MOVEMENT_SPEED = 500;   // Horizontale Bewegungsgeschwindigkeit
-    private static final float PLAYER_SIZE = 60;  // Spielergröße in Pixeln
+    private static final float PLAYER_SIZE = 40;  // Spielergröße in Pixeln
     private Rectangle bounds;  // Für Kollisionserkennung und Zeichnung
     private ShapeRenderer shapeRenderer;  // Als Klassenvariable
 
