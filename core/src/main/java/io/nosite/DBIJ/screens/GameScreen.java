@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
+import io.nosite.DBIJ.entities.MovingPlatform;
 import io.nosite.DBIJ.entities.Platform;
 import io.nosite.DBIJ.entities.Player;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -56,7 +57,12 @@ public class GameScreen implements Screen {
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
-            platforms.add(new Platform(randomX, nextY));
+            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+                platforms.add(new MovingPlatform(randomX, nextY));
+            } else {
+                platforms.add(new Platform(randomX, nextY));
+            }
+
             nextY += MathUtils.random(110, 150);
         }
     }
@@ -97,6 +103,12 @@ public class GameScreen implements Screen {
             camera.update();
         }
         updatePlatforms();
+
+        for(Platform platform : platforms) {
+            if(platform instanceof MovingPlatform) {
+                ((MovingPlatform) platform).update(delta);
+            }
+        }
 
         // Ränder zeichnen
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -162,7 +174,12 @@ public class GameScreen implements Screen {
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
-            platforms.add(new Platform(randomX, nextY));
+            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+                platforms.add(new MovingPlatform(randomX, nextY));
+            } else {
+                platforms.add(new Platform(randomX, nextY));
+            }
+
             nextY += MathUtils.random(110, 150);
         }
     }
@@ -190,7 +207,12 @@ public class GameScreen implements Screen {
             float randomOffset = MathUtils.random(sectionWidth * 0.8f);
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
-            platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+            if(MathUtils.random(100) < 20) {  // 20% Chance für bewegliche Plattform
+                platforms.add(new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+            } else {
+                platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+            }
+
             highestPlatformY += MathUtils.random(110, 150);
         }
     }
