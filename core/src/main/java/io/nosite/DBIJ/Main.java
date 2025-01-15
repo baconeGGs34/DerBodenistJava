@@ -3,6 +3,7 @@ package io.nosite.DBIJ;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.screens.GameScreen;
 import io.nosite.DBIJ.screens.MenuScreen;
 
@@ -14,14 +15,15 @@ public class Main extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-//        setScreen(new GameScreen());  // Startet das Spiel mit dem GameScreen
+        FontManager.initialize();
         setScreen(new MenuScreen());
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();  // Ressourcen freigeben
+        batch.dispose();
+        FontManager.dispose();
     }
 
     public SpriteBatch getBatch() {
