@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class ScoreManager {
     private static final String PREF_NAME = "highscores";
-    private static final int MAX_SCORES = 5;
+    private static final int MAX_SCORES = 3;
     private Preferences prefs;
 
     public ScoreManager() {

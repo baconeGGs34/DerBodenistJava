@@ -212,7 +212,7 @@ public class GameScreen implements Screen {
             font = FontManager.getFont();
 
             // Aktueller Score
-            font.getData().setScale(2.0f);
+            font.getData().setScale(2.5f);
             String scoreText = "SCORE: " + (int)(highscore/100);
             glyphLayout.setText(font, scoreText);
             font.draw(batch, scoreText,

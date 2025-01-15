@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
@@ -28,6 +31,13 @@ public class MenuScreen implements Screen {
     private Rectangle startBounds, quitBounds;
     private static final float MIN_WORLD_WIDTH = 480;
     private static final float MIN_WORLD_HEIGHT = 800;
+    private Texture startButtonPressedTexture;
+    private Texture quitButtonPressedTexture;
+    private Texture backgroundTexture;
+    private boolean startButtonIsPressed = false;
+    private boolean quitButtonIsPressed = false;
+    private float backgroundScrollPosition = 0;
+    private static final float SCROLL_SPEED = 30f;
 
     // Button Größen definieren
     private static final float BUTTON_WIDTH = 285;  // 95 * 3
@@ -46,10 +56,13 @@ public class MenuScreen implements Screen {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         font = FontManager.getFont();
         generator.dispose(); // Generator aufräumen
-
-
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         quitButtonTexture = new Texture("images/buttons/quitbutton.png");
+        startButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
+        quitButtonPressedTexture = new Texture("images/buttons/quitbuttonpressed.png");
+        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
 
         // Kollisionsbereiche für die Buttons
         startBounds = new Rectangle(
@@ -75,55 +88,118 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 1);
+
+        GlyphLayout glyphLayout = new GlyphLayout();
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        // Hintergrund-Scroll aktualisieren
+        backgroundScrollPosition += SCROLL_SPEED * delta;
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
+        // Scrollender Hintergrund
         batch.begin();
+        float bgHeight = backgroundTexture.getHeight();
+        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        float offsetY = backgroundScrollPosition % bgHeight;
+
+        for(int i = -1; i < 2; i++) {
+            float y = baseY - offsetY + (i * bgHeight);
+            batch.draw(backgroundTexture,
+                camera.position.x - viewport.getWorldWidth()/2,
+                y,
+                viewport.getWorldWidth(),
+                bgHeight);
+        }
+        batch.end();
+
+        // Halbtransparente Overlay-Schicht
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 0.5f);
+        shapeRenderer.rect(
+            camera.position.x - viewport.getWorldWidth()/2,
+            camera.position.y - viewport.getWorldHeight()/2,
+            viewport.getWorldWidth(),
+            viewport.getWorldHeight()
+        );
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        batch.begin();
+        // Buttons im oberen Drittel
+        float topThirdY = camera.position.y + viewport.getWorldHeight()/6;
+
         // Start Button
-        batch.draw(startButtonTexture,
+        batch.draw(startButtonIsPressed ? startButtonPressedTexture : startButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            MIN_WORLD_HEIGHT/2 + BUTTON_SPACING,
+            topThirdY + BUTTON_SPACING,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
 
         // Quit Button
-        batch.draw(quitButtonTexture,
+        batch.draw(quitButtonIsPressed ? quitButtonPressedTexture : quitButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            MIN_WORLD_HEIGHT/2 - BUTTON_SPACING - BUTTON_HEIGHT,
+            topThirdY - BUTTON_HEIGHT,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
 
-        // Überschrift
+        // Highscores in der unteren Hälfte
+        font = FontManager.getFont();
         font.getData().setScale(1.5f);
-        font.draw(batch, "HIGHSCORES:",
-            MIN_WORLD_WIDTH/2 - 70,  // X-Position anpassen nach Bedarf
-            MIN_WORLD_HEIGHT - 50);  // Oben mit etwas Abstand
+        String highscoreTitle = "HIGHSCORES";
+        glyphLayout.setText(font, highscoreTitle);
+        font.draw(batch, highscoreTitle,
+            camera.position.x - glyphLayout.width/2,
+            camera.position.y - viewport.getWorldHeight()/4);
 
-// Highscores anzeigen
         font.getData().setScale(1.2f);
         int[] highScores = scoreManager.getHighScores();
         for (int i = 0; i < highScores.length; i++) {
-            font.draw(batch,
-                (i + 1) + ".  " + highScores[i],
-                MIN_WORLD_WIDTH/2 - 50,  // X-Position
-                MIN_WORLD_HEIGHT - 100 - (i * 40));  // Y-Position, 40 Pixel Abstand zwischen Einträgen
+            String scoreEntry = (i + 1) + ".  " + highScores[i];
+            glyphLayout.setText(font, scoreEntry);
+            font.draw(batch, scoreEntry,
+                camera.position.x - glyphLayout.width/2,
+                camera.position.y - viewport.getWorldHeight()/4 - ((i + 1) * 40));
         }
-
         batch.end();
 
-        // Klick-Erkennung
+        // Button-Bereiche aktualisieren
+        startBounds.set(MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topThirdY + BUTTON_SPACING,
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT);
+        quitBounds.set(MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topThirdY - BUTTON_HEIGHT,
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT);
+
+        // Klick-Logik
         if(Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
             if(startBounds.contains(touchPos.x, touchPos.y)) {
-                ((Main)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                startButtonIsPressed = true;
+                // Kurze Verzögerung vor dem Screenwechsel
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                    }
+                }, 0.2f);
             } else if(quitBounds.contains(touchPos.x, touchPos.y)) {
-                Gdx.app.exit();
+                quitButtonIsPressed = true;
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        Gdx.app.exit();
+                    }
+                }, 0.2f);
             }
         }
     }
@@ -152,5 +228,8 @@ public class MenuScreen implements Screen {
     public void dispose() {
         startButtonTexture.dispose();
         quitButtonTexture.dispose();
+        quitButtonTexture.dispose();
+        quitButtonPressedTexture.dispose();
+        backgroundTexture.dispose();
     }
 }
