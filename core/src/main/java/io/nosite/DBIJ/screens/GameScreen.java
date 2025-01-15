@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.entities.BreakablePlatform;
@@ -49,6 +50,13 @@ public class GameScreen implements Screen {
     private static final float BUTTON_HEIGHT = 90;
     private static final float BUTTON_SPACING = 50;
     private GlyphLayout glyphLayout = new GlyphLayout();
+    private Texture startButtonPressedTexture;
+    private Texture leaveButtonPressedTexture;
+    private boolean startButtonIsPressed = false;
+    private boolean leaveButtonIsPressed = false;
+    private float backgroundScrollPosition = 0;
+    private static final float SCROLL_SPEED = 30f;
+    private static final Color SCORE_COLOR = new Color(1, 1, 0, 1); // Gelb
 
     @Override
     public void show() {
@@ -110,60 +118,56 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        // Hintergrund zeichnen
+        // Spiellogik
+        player.update(delta, platforms);
+        highscore = Math.max(highscore, player.getPosition().y);
+
+        // Game Over Check
+        if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
+            ((Main)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((int)(highscore/100)));
+            return;
+        }
+
+        // Kamera folgt dem Spieler nur nach oben
+        if (player.getPosition().y > camera.position.y) {
+            camera.position.y = player.getPosition().y;
+            camera.update();
+        }
+        updatePlatforms();
+
+        for(Platform platform : platforms) {
+            if(platform instanceof MovingPlatform) {
+                ((MovingPlatform) platform).update(delta);
+            }
+        }
+
+        // Hintergrund rendern
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
+        float baseY = camera.position.y - viewport.getWorldHeight()/2;
         float offsetY = baseY % bgHeight;
-        for (int i = -1; i < 2; i++) {
+        for(int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth() / 2,
+                camera.position.x - viewport.getWorldWidth()/2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
         }
         batch.end();
 
-        // Spiellogik
-        if (!gameOver) {
-            player.update(delta, platforms);
-            highscore = Math.max(highscore, player.getPosition().y);
-
-            // Game Over Check
-            if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
-                if (!gameOver) {  // Nur beim ersten Mal wenn gameOver true wird
-                    gameOver = true;
-                    scoreManager.addScore((int)(highscore/100));  // Score speichern
-                }
-            }
-
-            // Kamera folgt dem Spieler nur nach oben
-            if (player.getPosition().y > camera.position.y) {
-                camera.position.y = player.getPosition().y;
-                camera.update();
-            }
-            updatePlatforms();
-
-            for (Platform platform : platforms) {
-                if (platform instanceof MovingPlatform) {
-                    ((MovingPlatform) platform).update(delta);
-                }
-            }
-        }
-
         // Ränder zeichnen
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth() / 2,
-            camera.position.y - viewport.getWorldHeight() / 2,
+            camera.position.x - viewport.getWorldWidth()/2,
+            camera.position.y - viewport.getWorldHeight()/2,
             40,
             viewport.getWorldHeight()
         );
         shapeRenderer.rect(
-            camera.position.x + viewport.getWorldWidth() / 2 - 40,
-            camera.position.y - viewport.getWorldHeight() / 2,
+            camera.position.x + viewport.getWorldWidth()/2 - 40,
+            camera.position.y - viewport.getWorldHeight()/2,
             40,
             viewport.getWorldHeight()
         );
@@ -185,101 +189,6 @@ public class GameScreen implements Screen {
             camera.position.x - viewport.getWorldWidth()/2 + 20,
             camera.position.y + viewport.getWorldHeight()/2 - 20);
         batch.end();
-
-        // Game Over Screen
-        if (gameOver) {
-            // Wenn Space gedrückt, neues Spiel starten
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                resetGame();
-                return;
-            }
-
-            // Halbtransparenter schwarzer Hintergrund
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 0, 0, 0.8f);
-            shapeRenderer.rect(
-                camera.position.x - viewport.getWorldWidth()/2,
-                camera.position.y - viewport.getWorldHeight()/2,
-                viewport.getWorldWidth(),
-                viewport.getWorldHeight()
-            );
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-            // Game Over Screen Content
-            batch.begin();
-            font = FontManager.getFont();
-
-            // Aktueller Score
-            font.getData().setScale(2.5f);
-            String scoreText = "SCORE: " + (int)(highscore/100);
-            glyphLayout.setText(font, scoreText);
-            font.draw(batch, scoreText,
-                camera.position.x - glyphLayout.width/2,
-                camera.position.y + viewport.getWorldHeight()/4);
-
-            // Highscores
-            font.getData().setScale(1.5f);
-            String highscoreTitle = "HIGHSCORES:";
-            glyphLayout.setText(font, highscoreTitle);
-            font.draw(batch, highscoreTitle,
-                camera.position.x - glyphLayout.width/2,
-                camera.position.y + 50);
-
-            font.getData().setScale(1.2f);
-            int[] highScores = scoreManager.getHighScores();
-            for (int i = 0; i < highScores.length; i++) {
-                String scoreEntry = (i + 1) + ".  " + highScores[i];
-                glyphLayout.setText(font, scoreEntry);
-                font.draw(batch, scoreEntry,
-                    camera.position.x - glyphLayout.width/2,
-                    camera.position.y - (i * 40));
-            }
-
-            // Buttons
-            batch.draw(startButtonTexture,
-                camera.position.x - BUTTON_WIDTH/2,
-                camera.position.y - viewport.getWorldHeight()/4,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT);
-
-            batch.draw(leaveButtonTexture,
-                camera.position.x - BUTTON_WIDTH/2,
-                camera.position.y - viewport.getWorldHeight()/4 - BUTTON_HEIGHT - BUTTON_SPACING,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT);
-
-            batch.end();
-
-            // Button Bounds aktualisieren
-            startButtonBounds = new Rectangle(
-                camera.position.x - BUTTON_WIDTH/2,
-                camera.position.y - viewport.getWorldHeight()/4,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT
-            );
-
-            leaveButtonBounds = new Rectangle(
-                camera.position.x - BUTTON_WIDTH/2,
-                camera.position.y - viewport.getWorldHeight()/4 - BUTTON_HEIGHT - BUTTON_SPACING,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT
-            );
-
-            // Klick-Erkennung
-            if(Gdx.input.justTouched()) {
-                Vector3 touchPos = new Vector3();
-                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                camera.unproject(touchPos);
-
-                if(startButtonBounds.contains(touchPos.x, touchPos.y)) {
-                    resetGame();
-                } else if(leaveButtonBounds.contains(touchPos.x, touchPos.y)) {
-                    ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-                }
-            }
-        }
     }
 
     private void resetGame() {
@@ -380,6 +289,8 @@ public class GameScreen implements Screen {
         shapeRenderer.dispose();
         backgroundTexture.dispose();
         startButtonTexture.dispose();
+        startButtonPressedTexture.dispose();
         leaveButtonTexture.dispose();
+        leaveButtonPressedTexture.dispose();
     }
 }

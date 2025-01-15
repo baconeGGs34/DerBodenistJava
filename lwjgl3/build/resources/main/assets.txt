@@ -13,4 +13,6 @@ images/buttons/startbutton.png
 images/buttons/startbuttonpressed.png
 images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
+images/char.png
+images/charjump.png
 images/nobuttonpressed.png-autosave.kra
