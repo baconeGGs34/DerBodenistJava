@@ -173,13 +173,17 @@ public class GameScreen implements Screen {
         );
         shapeRenderer.end();
 
-        // Formen rendern (Plattformen und Player)
+        // Plattformen rendern
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Platform platform : platforms) {
             platform.render(shapeRenderer);
         }
-        player.render(shapeRenderer);
         shapeRenderer.end();
+
+        // Player rendern
+        batch.begin();
+        player.render(batch);
+        batch.end();
 
         // Score rendern
         batch.begin();
