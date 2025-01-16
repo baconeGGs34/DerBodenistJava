@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player {
 
+    private boolean isAndroid;
     private Vector2 position;     // Aktuelle Position des Spielers
     private Vector2 velocity;     // Geschwindigkeit und Richtung
     private float width;          // Breite des Spielers für Kollisionen
@@ -35,10 +36,11 @@ public class Player {
     private static final float PLAYER_HEIGHT = 50;
     private Texture[] jumpTextures;
 
-    public Player(float x, float y) {
+    public Player(float x, float y, boolean isAndroid) {
         position = new Vector2(x, y);
         velocity = new Vector2();
         bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
+        this.isAndroid = isAndroid;
 
         jumpTextures = new Texture[FRAME_COUNT];
         for(int i = 0; i < FRAME_COUNT; i++) {
@@ -68,13 +70,30 @@ public class Player {
     }
 
     public void update(float delta, Array<Platform> platforms) {
-        // Horizontale Bewegung durch Tastatur
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-            velocity.x = -MOVEMENT_SPEED;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            velocity.x = MOVEMENT_SPEED;
+        if(isAndroid) {
+            // Verbesserte Android Accelerometer Steuerung
+            float accelX = Gdx.input.getAccelerometerX();
+
+            // Nicht-lineare Transformationsfunktion für mehr Präzision
+            float sensitivity = 1.2f; // Experimentieren Sie mit diesem Wert
+            float mappedVelocity = -(Math.signum(accelX) * (float)Math.pow(Math.abs(accelX), sensitivity)) * MOVEMENT_SPEED;
+
+            // Deadzone hinzufügen, um unbeabsichtigte kleine Bewegungen zu vermeiden
+            float deadzone = 0.5f;
+            if (Math.abs(accelX) > deadzone) {
+                velocity.x = mappedVelocity;
+            } else {
+                velocity.x = 0;
+            }
         } else {
-            velocity.x = 0;
+            // Bestehende Desktop-Steuerung bleibt unverändert
+            if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+                velocity.x = -MOVEMENT_SPEED;
+            } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+                velocity.x = MOVEMENT_SPEED;
+            } else {
+                velocity.x = 0;
+            }
         }
 
         // Schwerkraft auf vertikale Geschwindigkeit anwenden

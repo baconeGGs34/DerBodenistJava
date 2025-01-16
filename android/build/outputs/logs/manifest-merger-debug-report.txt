@@ -4,6 +4,7 @@ ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:2:1-13:12
 	package
 		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
@@ -47,7 +48,7 @@ INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:5:3-25:17
 activity#io.nosite.DBIJ.android.AndroidLauncher
 ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:14:5-24:16
 	android:screenOrientation
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:17:9-46
+		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:17:9-45
 	android:label
 		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:16:9-41
 	android:exported
@@ -70,6 +71,8 @@ uses-sdk
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
 INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
 MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
 MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
 	android:targetSdkVersion

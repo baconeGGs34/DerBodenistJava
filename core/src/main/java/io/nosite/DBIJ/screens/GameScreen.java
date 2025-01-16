@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
     public void show() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        player = new Player(MIN_WORLD_WIDTH / 2, 400);
+        player = new Player(MIN_WORLD_WIDTH / 2, 400,true);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
@@ -199,7 +199,7 @@ public class GameScreen implements Screen {
         gameOver = false;
         highscore = 0;
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-        player = new Player(MIN_WORLD_WIDTH / 2, 400);
+//        player = new Player(MIN_WORLD_WIDTH / 2, 400,false);
 
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
