@@ -15,4 +15,9 @@ images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
 images/char.png
 images/charjump.png
+images/jump1.png
+images/jump2.png
+images/jump3.png
+images/jump4.png
+images/jump5.png
 images/nobuttonpressed.png-autosave.kra

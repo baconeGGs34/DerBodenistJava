@@ -26,30 +26,39 @@ public class Player {
     private TextureRegion[] jumpAnimation;
     private float stateTime = 0;  // statt animationTimer
     private int currentFrame = 0;
-    private static final float FRAME_DURATION = 0.5f;
+    private static final float FRAME_DURATION = 0.2f;
     private boolean isJumping = true;
-    private static final int JUMP_FRAME_COUNT = 5;  // 5 Frames für die Animation
+    private static final int FRAME_COUNT = 5;  // 5 Frames für die Animation
     private static final int FRAME_WIDTH = 40;      // Breite eines Sprites
     private static final int FRAME_HEIGHT = 50;     // Höhe eines Sprites
-    private static final float PLAYER_WIDTH = 40;   // Angezeigte Breite
+    private static final float PLAYER_WIDTH = 35;   // Angezeigte Breite
     private static final float PLAYER_HEIGHT = 50;
+    private Texture[] jumpTextures;
 
     public Player(float x, float y) {
         position = new Vector2(x, y);
         velocity = new Vector2();
         bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
 
+        jumpTextures = new Texture[FRAME_COUNT];
+        for(int i = 0; i < FRAME_COUNT; i++) {
+            jumpTextures[i] = new Texture("images/jump" + (i+1) + ".png");
+        }
+
         // Sprite Sheet laden
         spriteSheet = new Texture("images/charjump.png");
-        jumpAnimation = new TextureRegion[JUMP_FRAME_COUNT];
+        jumpAnimation = new TextureRegion[FRAME_COUNT];
 
-        // Die 5 Frames aus dem Spritesheet ausschneiden
-        for (int i = 0; i < JUMP_FRAME_COUNT; i++) {
+        // Exakte x-Positionen und Breiten für jeden Frame
+        int[] frameX = {0, 32, 64, 96, 128};  // X-Positionen angepasst
+        int[] frameWidths = {32, 32, 32, 32, 32};  // Alle Frames sind etwa 32px breit
+
+        for (int i = 0; i < FRAME_COUNT; i++) {
             jumpAnimation[i] = new TextureRegion(spriteSheet,
-                i * FRAME_WIDTH,  // x-Position: jedes Sprite ist 32px breit
-                0,               // y-Position: nur eine Reihe, daher 0
-                FRAME_WIDTH,     // Breite: 32px
-                FRAME_HEIGHT     // Höhe: 32px
+                frameX[i],         // Exakte x-Position für diesen Frame
+                0,                 // y-Position bleibt 0
+                frameWidths[i],    // Individuelle Breite für diesen Frame
+                32                 // Höhe (die Sprites scheinen etwa 32px hoch zu sein)
             );
         }
     }
@@ -94,16 +103,18 @@ public class Player {
             isJumping = false;
         }
 
-        // Animation State aktualisieren
+        // Animation aktualisieren
         stateTime += delta;
         if (stateTime >= FRAME_DURATION) {
             stateTime = 0;
             if (isJumping) {
+                // Vorwärts Animation beim Springen
                 currentFrame++;
-                if (currentFrame >= JUMP_FRAME_COUNT) {
-                    currentFrame = JUMP_FRAME_COUNT - 1;
+                if (currentFrame >= FRAME_COUNT) {
+                    currentFrame = FRAME_COUNT - 1;
                 }
             } else {
+                // Rückwärts Animation beim Fallen
                 currentFrame--;
                 if (currentFrame < 0) {
                     currentFrame = 0;
@@ -142,15 +153,19 @@ public class Player {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(jumpAnimation[currentFrame],
+        // Zeichne die aktuelle Textur in der gewünschten Größe
+        batch.draw(jumpTextures[currentFrame],
             position.x,
             position.y,
-            PLAYER_WIDTH,  // Benutze die definierten Größen
+            PLAYER_WIDTH,
             PLAYER_HEIGHT);
     }
 
     public void dispose() {
-        spriteSheet.dispose();
+        // Alle Texturen aufräumen
+        for(Texture texture : jumpTextures) {
+            texture.dispose();
+        }
     }
 }
 
