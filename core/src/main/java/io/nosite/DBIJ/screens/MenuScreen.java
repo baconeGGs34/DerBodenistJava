@@ -28,21 +28,26 @@ public class MenuScreen implements Screen {
     private ExtendViewport viewport;
     private Texture startButtonTexture;
     private Texture quitButtonTexture;
-    private Rectangle startBounds, quitBounds;
-    private static final float MIN_WORLD_WIDTH = 480;
-    private static final float MIN_WORLD_HEIGHT = 800;
     private Texture startButtonPressedTexture;
     private Texture quitButtonPressedTexture;
+    private Texture settingsButtonTexture;
+    private Texture settingsButtonPressedTexture;
+    private Rectangle startBounds, quitBounds, settingsBounds;
+    private static final float MIN_WORLD_WIDTH = 480;
+    private static final float MIN_WORLD_HEIGHT = 800;
     private Texture backgroundTexture;
     private boolean startButtonIsPressed = false;
     private boolean quitButtonIsPressed = false;
+    private boolean settingsButtonIsPressed = false;
     private float backgroundScrollPosition = 0;
     private static final float SCROLL_SPEED = 30f;
 
     // Button Größen definieren
     private static final float BUTTON_WIDTH = 285;  // 95 * 3
     private static final float BUTTON_HEIGHT = 90;  // 30 * 3
-    private static final float BUTTON_SPACING = 30; // Abstand zwischen den Buttons
+    private static final float BUTTON_SPACING = 25; // Abstand zwischen den Buttons
+    private static final float TOP_THIRD_Y = MIN_WORLD_HEIGHT * 2/3;
+    private static final float VERTICAL_SPACING = BUTTON_HEIGHT + 20;  // Buttonhöhe + 20px Abstand
     private ScoreManager scoreManager;
     private BitmapFont font;
 
@@ -52,29 +57,40 @@ public class MenuScreen implements Screen {
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
         batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
         scoreManager = new ScoreManager();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ThaleahFat.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        font = FontManager.getFont();
-        generator.dispose(); // Generator aufräumen
+
+        // Rectangles initialisieren
+        startBounds = new Rectangle();
+        settingsBounds = new Rectangle();
+        quitBounds = new Rectangle();
+
+        // Textures laden
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         quitButtonTexture = new Texture("images/buttons/quitbutton.png");
         startButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
         quitButtonPressedTexture = new Texture("images/buttons/quitbuttonpressed.png");
+        settingsButtonTexture = new Texture("images/buttons/settingsbutton.png");
+        settingsButtonPressedTexture = new Texture("images/buttons/settingsbuttonpressed.png");
         backgroundTexture = new Texture("images/bg.jpg");
         backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
 
-        // Kollisionsbereiche für die Buttons
-        startBounds = new Rectangle(
+        startBounds.set(
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            MIN_WORLD_HEIGHT/2 + BUTTON_SPACING,
+            TOP_THIRD_Y + BUTTON_SPACING,
             BUTTON_WIDTH,
             BUTTON_HEIGHT
         );
 
-        quitBounds = new Rectangle(
+        settingsBounds.set(
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            MIN_WORLD_HEIGHT/2 - BUTTON_SPACING - BUTTON_HEIGHT,
+            TOP_THIRD_Y - BUTTON_HEIGHT - BUTTON_SPACING,
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT
+        );
+
+        quitBounds.set(
+            MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            TOP_THIRD_Y - (2 * BUTTON_HEIGHT) - (2 * BUTTON_SPACING),
             BUTTON_WIDTH,
             BUTTON_HEIGHT
         );
@@ -130,22 +146,29 @@ public class MenuScreen implements Screen {
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin();
-        // Buttons im oberen Drittel
-        float topThirdY = camera.position.y + viewport.getWorldHeight()/6;
+        float topButtonY = TOP_THIRD_Y;
 
-        // Start Button
+// Start Button (oben)
         batch.draw(startButtonIsPressed ? startButtonPressedTexture : startButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            topThirdY + BUTTON_SPACING,
+            topButtonY,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
 
-        // Quit Button
-        batch.draw(quitButtonIsPressed ? quitButtonPressedTexture : quitButtonTexture,
+// Settings Button (mitte)
+        batch.draw(settingsButtonIsPressed ? settingsButtonPressedTexture : settingsButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            topThirdY - BUTTON_HEIGHT,
+            topButtonY - VERTICAL_SPACING,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
+
+// Quit Button (unten)
+        batch.draw(quitButtonIsPressed ? quitButtonPressedTexture : quitButtonTexture,
+            MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topButtonY - (2 * VERTICAL_SPACING),
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT);
+
 
         // Highscores in der unteren Hälfte
         font = FontManager.getFont();
@@ -167,15 +190,26 @@ public class MenuScreen implements Screen {
         }
         batch.end();
 
-        // Button-Bereiche aktualisieren
-        startBounds.set(MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            topThirdY + BUTTON_SPACING,
+        startBounds.set(
+            MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topButtonY,
             BUTTON_WIDTH,
-            BUTTON_HEIGHT);
-        quitBounds.set(MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
-            topThirdY - BUTTON_HEIGHT,
+            BUTTON_HEIGHT
+        );
+
+        settingsBounds.set(
+            MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topButtonY - VERTICAL_SPACING,
             BUTTON_WIDTH,
-            BUTTON_HEIGHT);
+            BUTTON_HEIGHT
+        );
+
+        quitBounds.set(
+            MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
+            topButtonY - (2 * VERTICAL_SPACING),
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT
+        );
 
         // Klick-Logik
         if(Gdx.input.justTouched()) {
@@ -190,6 +224,14 @@ public class MenuScreen implements Screen {
                     @Override
                     public void run() {
                         ((Main)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                    }
+                }, 0.2f);
+            } else if (settingsBounds.contains(touchPos.x, touchPos.y)){
+                settingsButtonIsPressed = true;
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new SettingsScreen());
                     }
                 }, 0.2f);
             } else if(quitBounds.contains(touchPos.x, touchPos.y)) {
@@ -227,9 +269,11 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         startButtonTexture.dispose();
-        quitButtonTexture.dispose();
+        settingsButtonPressedTexture.dispose();
         quitButtonTexture.dispose();
         quitButtonPressedTexture.dispose();
+        settingsButtonTexture.dispose();
+        settingsButtonPressedTexture.dispose();
         backgroundTexture.dispose();
     }
 }

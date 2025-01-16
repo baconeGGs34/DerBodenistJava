@@ -10,8 +10,13 @@ images/buttons/leavebutton.png
 images/buttons/leavebuttonpressed.png
 images/buttons/nobutton.png
 images/buttons/nobuttonpressed.png
+images/buttons/offbutton.png
+images/buttons/onbutton.png
+images/buttons/onbutton.png-autosave.kra
 images/buttons/quitbutton.png
 images/buttons/quitbuttonpressed.png
+images/buttons/settingsbutton.png
+images/buttons/settingsbuttonpressed.png
 images/buttons/startbutton.png
 images/buttons/startbuttonpressed.png
 images/buttons/yesbutton.png
@@ -23,5 +28,4 @@ images/jump2.png
 images/jump3.png
 images/jump4.png
 images/jump5.png
-images/jump5.png-autosave.kra
 images/nobuttonpressed.png-autosave.kra
