@@ -45,6 +45,8 @@ public class GameScreen implements Screen {
     private ScoreManager scoreManager;
     private Texture startButtonTexture;
     private Texture leaveButtonTexture;
+    private Texture leftButtonTexture;
+    private Texture rightButtonTexture;
     private Rectangle startButtonBounds, leaveButtonBounds;
     private static final float BUTTON_WIDTH = 285;  // 3x Originalgröße wie im Menu
     private static final float BUTTON_HEIGHT = 90;
@@ -62,12 +64,14 @@ public class GameScreen implements Screen {
     public void show() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        player = new Player(MIN_WORLD_WIDTH / 2, 400,true);
+        player = new Player(MIN_WORLD_WIDTH / 2, 400,false);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
+        leftButtonTexture = new Texture("images/buttons/buttonleft.png");
+        rightButtonTexture = new Texture("images/buttons/buttonright.png");
         font = FontManager.getFont();
 
         font = new BitmapFont();

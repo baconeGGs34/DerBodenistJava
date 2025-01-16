@@ -2,6 +2,9 @@
 fonts/ThaleahFat.ttf
 images/bg.jpg
 images/bg3.jpg
+images/buttons/Pixel Art Buttons.png
+images/buttons/buttonleft.png
+images/buttons/buttonright.png
 images/buttons/buttons.png
 images/buttons/leavebutton.png
 images/buttons/leavebuttonpressed.png
@@ -20,4 +23,5 @@ images/jump2.png
 images/jump3.png
 images/jump4.png
 images/jump5.png
+images/jump5.png-autosave.kra
 images/nobuttonpressed.png-autosave.kra
