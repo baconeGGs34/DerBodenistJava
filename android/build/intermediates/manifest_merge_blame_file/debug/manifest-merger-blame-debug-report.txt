@@ -17,21 +17,21 @@
 14
 15    <application
 15-->C:\Java\DBIJ\android\AndroidManifest.xml:5:3-25:17
-16        android:name="androidx.multidex.MultiDexApplication"
-17        android:allowBackup="true"
-17-->C:\Java\DBIJ\android\AndroidManifest.xml:6:7-33
-18        android:appCategory="game"
-18-->C:\Java\DBIJ\android\AndroidManifest.xml:10:7-33
-19        android:debuggable="true"
-20        android:extractNativeLibs="true"
-21        android:fullBackupContent="true"
-21-->C:\Java\DBIJ\android\AndroidManifest.xml:7:7-39
-22        android:icon="@drawable/ic_launcher"
-22-->C:\Java\DBIJ\android\AndroidManifest.xml:8:7-43
-23        android:isGame="true"
-23-->C:\Java\DBIJ\android\AndroidManifest.xml:9:7-28
-24        android:label="@string/app_name"
-24-->C:\Java\DBIJ\android\AndroidManifest.xml:11:7-39
+16        android:allowBackup="true"
+16-->C:\Java\DBIJ\android\AndroidManifest.xml:6:7-33
+17        android:appCategory="game"
+17-->C:\Java\DBIJ\android\AndroidManifest.xml:10:7-33
+18        android:debuggable="true"
+19        android:extractNativeLibs="true"
+20        android:fullBackupContent="true"
+20-->C:\Java\DBIJ\android\AndroidManifest.xml:7:7-39
+21        android:icon="@drawable/ic_launcher"
+21-->C:\Java\DBIJ\android\AndroidManifest.xml:8:7-43
+22        android:isGame="true"
+22-->C:\Java\DBIJ\android\AndroidManifest.xml:9:7-28
+23        android:label="@string/app_name"
+23-->C:\Java\DBIJ\android\AndroidManifest.xml:11:7-39
+24        android:testOnly="true"
 25        android:theme="@style/GdxTheme" >
 25-->C:\Java\DBIJ\android\AndroidManifest.xml:13:7-38
 26        <activity

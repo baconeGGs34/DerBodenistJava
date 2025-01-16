@@ -14,7 +14,7 @@ public class BreakablePlatform extends Platform {
     @Override
     public void render(ShapeRenderer shapeRenderer) {
         if (!isBroken) {
-            shapeRenderer.setColor(Color.ORANGE); // Andere Farbe für zerbrechliche Plattformen
+            shapeRenderer.setColor(Color.ORANGE);  // Andere Farbe für zerbrechliche Plattformen
             shapeRenderer.rect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
         }
     }
@@ -24,6 +24,6 @@ public class BreakablePlatform extends Platform {
     }
 
     public void breakPlatform() {
-        isBroken = true;
+        this.isBroken = true;
     }
 }
