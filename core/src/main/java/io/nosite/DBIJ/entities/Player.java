@@ -68,118 +68,13 @@ public class Player {
     }
 
     //region TouchButtons Control
-//    public void update(float delta, Array<Platform> platforms) {
-//        if(isAndroid) {
-//            // Touch-Button-Steuerung mit Texturen
-//            if (leftButton.getBounds().contains(touchPoint.x, touchPoint.y)) {
-//                velocity.x = -MOVEMENT_SPEED;
-//            } else if (rightButton.getBounds().contains(touchPoint.x, touchPoint.y)) {
-//                velocity.x = MOVEMENT_SPEED;
-//            } else {
-//                velocity.x = 0;
-//            }
-//        } else {
-//            // Bestehende Desktop-Steuerung bleibt unverändert
-//            if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-//                velocity.x = -MOVEMENT_SPEED;
-//            } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-//                velocity.x = MOVEMENT_SPEED;
-//            } else {
-//                velocity.x = 0;
-//            }
-//        }
-//
-//        // Schwerkraft auf vertikale Geschwindigkeit anwenden
-//        velocity.y -= 4000 * delta;
-//
-//        // Position basierend auf Geschwindigkeit aktualisieren
-//        position.x += velocity.x * delta;
-//        position.y += velocity.y * delta;
-//
-//        // Rand-Kollision prüfen
-//        if (position.x < 40) {
-//            position.x = 40;
-//            velocity.x = 0;
-//        }
-//        if (position.x > MIN_WORLD_WIDTH - 40 - PLAYER_SIZE) {
-//            position.x = MIN_WORLD_WIDTH - 40 - PLAYER_SIZE;
-//            velocity.x = 0;
-//        }
-//
-//        bounds.setPosition(position.x, position.y);
-//
-//        // Bewegungsrichtung bestimmen
-//        if (velocity.y > 0) {
-//            isJumping = true;
-//        } else if (velocity.y < 0) {
-//            isJumping = false;
-//        }
-//
-//        // Animation aktualisieren
-//        stateTime += delta;
-//        if (stateTime >= FRAME_DURATION) {
-//            stateTime = 0;
-//            if (isJumping) {
-//                // Vorwärts Animation beim Springen
-//                currentFrame++;
-//                if (currentFrame >= FRAME_COUNT) {
-//                    currentFrame = FRAME_COUNT - 1;
-//                }
-//            } else {
-//                // Rückwärts Animation beim Fallen
-//                currentFrame--;
-//                if (currentFrame < 0) {
-//                    currentFrame = 0;
-//                }
-//            }
-//        }
-//
-//        // Plattform Kollisionsprüfung (nur beim Fallen)
-//        if (velocity.y < 0) {
-//            for (Platform platform : platforms) {
-//                if (bounds.overlaps(platform.getBounds())) {
-//                    // Für zerbrechliche Plattformen
-//                    if(platform instanceof BreakablePlatform) {
-//                        if(((BreakablePlatform) platform).isActive()) {
-//                            position.y = platform.getBounds().y + platform.getBounds().height;
-//                            velocity.y = JUMP_VELOCITY;
-//                            ((BreakablePlatform) platform).breakPlatform();
-//                            // Animation zurücksetzen
-//                            currentFrame = 0;
-//                            stateTime = 0;
-//                            isJumping = true;
-//                        }
-//                    } else {
-//                        // Normale Plattform-Kollision
-//                        position.y = platform.getBounds().y + platform.getBounds().height;
-//                        velocity.y = JUMP_VELOCITY;
-//                        // Animation zurücksetzen
-//                        currentFrame = 0;
-//                        stateTime = 0;
-//                        isJumping = true;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
-    //endregion
-
-
-    //region Gyro Control
     public void update(float delta, Array<Platform> platforms) {
         if(isAndroid) {
-            // Verbesserte Android Accelerometer Steuerung
-            float accelX = Gdx.input.getAccelerometerX();
-
-            // Nicht-lineare Transformationsfunktion für mehr Präzision
-            float sensitivity = 1.2f; // Experimentieren Sie mit diesem Wert
-            float mappedVelocity = -(Math.signum(accelX) * (float)Math.pow(Math.abs(accelX), sensitivity)) * MOVEMENT_SPEED;
-
-            // Deadzone hinzufügen, um unbeabsichtigte kleine Bewegungen zu vermeiden
-            float deadzone = 0.5f;
-            if (Math.abs(accelX) > deadzone) {
-                velocity.x = mappedVelocity;
+            // Touch-Button-Steuerung mit Texturen
+            if (leftButton.getBounds().contains(touchPoint.x, touchPoint.y)) {
+                velocity.x = -MOVEMENT_SPEED;
+            } else if (rightButton.getBounds().contains(touchPoint.x, touchPoint.y)) {
+                velocity.x = MOVEMENT_SPEED;
             } else {
                 velocity.x = 0;
             }
@@ -268,6 +163,111 @@ public class Player {
             }
         }
     }
+    //endregion
+
+
+    //region Gyro Control
+//    public void update(float delta, Array<Platform> platforms) {
+//        if(isAndroid) {
+//            // Verbesserte Android Accelerometer Steuerung
+//            float accelX = Gdx.input.getAccelerometerX();
+//
+//            // Nicht-lineare Transformationsfunktion für mehr Präzision
+//            float sensitivity = 1.2f; // Experimentieren Sie mit diesem Wert
+//            float mappedVelocity = -(Math.signum(accelX) * (float)Math.pow(Math.abs(accelX), sensitivity)) * MOVEMENT_SPEED;
+//
+//            // Deadzone hinzufügen, um unbeabsichtigte kleine Bewegungen zu vermeiden
+//            float deadzone = 0.5f;
+//            if (Math.abs(accelX) > deadzone) {
+//                velocity.x = mappedVelocity;
+//            } else {
+//                velocity.x = 0;
+//            }
+//        } else {
+//            // Bestehende Desktop-Steuerung bleibt unverändert
+//            if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+//                velocity.x = -MOVEMENT_SPEED;
+//            } else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+//                velocity.x = MOVEMENT_SPEED;
+//            } else {
+//                velocity.x = 0;
+//            }
+//        }
+//
+//        // Schwerkraft auf vertikale Geschwindigkeit anwenden
+//        velocity.y -= 4000 * delta;
+//
+//        // Position basierend auf Geschwindigkeit aktualisieren
+//        position.x += velocity.x * delta;
+//        position.y += velocity.y * delta;
+//
+//        // Rand-Kollision prüfen
+//        if (position.x < 40) {
+//            position.x = 40;
+//            velocity.x = 0;
+//        }
+//        if (position.x > MIN_WORLD_WIDTH - 40 - PLAYER_SIZE) {
+//            position.x = MIN_WORLD_WIDTH - 40 - PLAYER_SIZE;
+//            velocity.x = 0;
+//        }
+//
+//        bounds.setPosition(position.x, position.y);
+//
+//        // Bewegungsrichtung bestimmen
+//        if (velocity.y > 0) {
+//            isJumping = true;
+//        } else if (velocity.y < 0) {
+//            isJumping = false;
+//        }
+//
+//        // Animation aktualisieren
+//        stateTime += delta;
+//        if (stateTime >= FRAME_DURATION) {
+//            stateTime = 0;
+//            if (isJumping) {
+//                // Vorwärts Animation beim Springen
+//                currentFrame++;
+//                if (currentFrame >= FRAME_COUNT) {
+//                    currentFrame = FRAME_COUNT - 1;
+//                }
+//            } else {
+//                // Rückwärts Animation beim Fallen
+//                currentFrame--;
+//                if (currentFrame < 0) {
+//                    currentFrame = 0;
+//                }
+//            }
+//        }
+//
+//        // Plattform Kollisionsprüfung (nur beim Fallen)
+//        if (velocity.y < 0) {
+//            for (Platform platform : platforms) {
+//                if (bounds.overlaps(platform.getBounds())) {
+//                    // Für zerbrechliche Plattformen
+//                    if(platform instanceof BreakablePlatform) {
+//                        if(((BreakablePlatform) platform).isActive()) {
+//                            position.y = platform.getBounds().y + platform.getBounds().height;
+//                            velocity.y = JUMP_VELOCITY;
+//                            ((BreakablePlatform) platform).breakPlatform();
+//                            // Animation zurücksetzen
+//                            currentFrame = 0;
+//                            stateTime = 0;
+//                            isJumping = true;
+//                        }
+//                    } else {
+//                        // Normale Plattform-Kollision
+//                        position.y = platform.getBounds().y + platform.getBounds().height;
+//                        velocity.y = JUMP_VELOCITY;
+//                        // Animation zurücksetzen
+//                        currentFrame = 0;
+//                        stateTime = 0;
+//                        isJumping = true;
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//    }
     //endregion
 
     public void render(SpriteBatch batch) {
