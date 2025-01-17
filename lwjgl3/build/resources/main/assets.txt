@@ -7,3 +7,13 @@ images/nobutton.png-autosave.kra
 images/quitbutton.png
 images/startbutton.png
 images/yesbutton.png
+.gitkeep
+assets.txt
+images/bg.jpg
+images/bg3.jpg
+images/buttons.png
+images/nobutton.png
+images/nobutton.png-autosave.kra
+images/quitbutton.png
+images/startbutton.png
+images/yesbutton.png
