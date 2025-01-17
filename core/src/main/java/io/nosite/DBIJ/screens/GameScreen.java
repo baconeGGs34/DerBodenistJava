@@ -42,6 +42,9 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
     private Texture backgroundTexture;
+    private Texture platformTexture;
+    private Texture breakableplatformTexture;
+    private Texture movingplatformTexture;
     private TextureRegion backgroundRegion;
     private ScoreManager scoreManager;
     private Texture startButtonTexture;
@@ -76,6 +79,10 @@ public class GameScreen implements Screen {
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
         showTouchControls = prefsManager.isAndroid() && !prefsManager.isGyroEnabled();
+
+        platformTexture = new Texture("images/platforms/platform.png");
+        breakableplatformTexture = new Texture("images/platforms/breakableplatform.png");
+        movingplatformTexture = new Texture("images/platforms/movingplatform.png");
 
         if (showTouchControls) {
             try {
