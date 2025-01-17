@@ -12,7 +12,6 @@ images/buttons/nobutton.png
 images/buttons/nobuttonpressed.png
 images/buttons/offbutton.png
 images/buttons/onbutton.png
-images/buttons/onbutton.png-autosave.kra
 images/buttons/quitbutton.png
 images/buttons/quitbuttonpressed.png
 images/buttons/settingsbutton.png
