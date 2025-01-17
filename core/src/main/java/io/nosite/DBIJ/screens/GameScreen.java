@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.entities.BreakablePlatform;
@@ -20,6 +23,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.nosite.DBIJ.managers.FontManager;
+import io.nosite.DBIJ.managers.ScoreManager;
 
 public class GameScreen implements Screen {
 
@@ -37,6 +42,21 @@ public class GameScreen implements Screen {
     private BitmapFont font;
     private Texture backgroundTexture;
     private TextureRegion backgroundRegion;
+    private ScoreManager scoreManager;
+    private Texture startButtonTexture;
+    private Texture leaveButtonTexture;
+    private Rectangle startButtonBounds, leaveButtonBounds;
+    private static final float BUTTON_WIDTH = 285;  // 3x Originalgröße wie im Menu
+    private static final float BUTTON_HEIGHT = 90;
+    private static final float BUTTON_SPACING = 50;
+    private GlyphLayout glyphLayout = new GlyphLayout();
+    private Texture startButtonPressedTexture;
+    private Texture leaveButtonPressedTexture;
+    private boolean startButtonIsPressed = false;
+    private boolean leaveButtonIsPressed = false;
+    private float backgroundScrollPosition = 0;
+    private static final float SCROLL_SPEED = 30f;
+    private static final Color SCORE_COLOR = new Color(1, 1, 0, 1); // Gelb
 
     @Override
     public void show() {
@@ -45,6 +65,10 @@ public class GameScreen implements Screen {
         player = new Player(MIN_WORLD_WIDTH / 2, 400);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
+        scoreManager = new ScoreManager();
+        startButtonTexture = new Texture("images/buttons/startbutton.png");
+        leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
+        font = FontManager.getFont();
 
         font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -94,119 +118,81 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        // Hintergrund zeichnen
+        // Spiellogik
+        player.update(delta, platforms);
+        highscore = Math.max(highscore, player.getPosition().y);
+
+        // Game Over Check
+        if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
+            ((Main)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((int)(highscore/100)));
+            return;
+        }
+
+        // Kamera folgt dem Spieler nur nach oben
+        if (player.getPosition().y > camera.position.y) {
+            camera.position.y = player.getPosition().y;
+            camera.update();
+        }
+        updatePlatforms();
+
+        for(Platform platform : platforms) {
+            if(platform instanceof MovingPlatform) {
+                ((MovingPlatform) platform).update(delta);
+            }
+        }
+
+        // Hintergrund rendern
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
+        float baseY = camera.position.y - viewport.getWorldHeight()/2;
         float offsetY = baseY % bgHeight;
-        for (int i = -1; i < 2; i++) {
+        for(int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth() / 2,
+                camera.position.x - viewport.getWorldWidth()/2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
         }
         batch.end();
 
-        // Spiellogik
-        if (!gameOver) {
-            player.update(delta, platforms);
-            highscore = Math.max(highscore, player.getPosition().y);
-
-            // Game Over Check
-            if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
-                gameOver = true;
-            }
-
-            // Kamera folgt dem Spieler nur nach oben
-            if (player.getPosition().y > camera.position.y) {
-                camera.position.y = player.getPosition().y;
-                camera.update();
-            }
-            updatePlatforms();
-
-            for (Platform platform : platforms) {
-                if (platform instanceof MovingPlatform) {
-                    ((MovingPlatform) platform).update(delta);
-                }
-            }
-        }
-
         // Ränder zeichnen
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth() / 2,
-            camera.position.y - viewport.getWorldHeight() / 2,
+            camera.position.x - viewport.getWorldWidth()/2,
+            camera.position.y - viewport.getWorldHeight()/2,
             40,
             viewport.getWorldHeight()
         );
         shapeRenderer.rect(
-            camera.position.x + viewport.getWorldWidth() / 2 - 40,
-            camera.position.y - viewport.getWorldHeight() / 2,
+            camera.position.x + viewport.getWorldWidth()/2 - 40,
+            camera.position.y - viewport.getWorldHeight()/2,
             40,
             viewport.getWorldHeight()
         );
         shapeRenderer.end();
 
-        // Formen rendern (Plattformen und Player)
+        // Plattformen rendern
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Platform platform : platforms) {
             platform.render(shapeRenderer);
         }
-        player.render(shapeRenderer);
         shapeRenderer.end();
+
+        // Player rendern
+        batch.begin();
+        player.render(batch);
+        batch.end();
 
         // Score rendern
         batch.begin();
+        font = FontManager.getFont();
         font.getData().setScale(1.0f);
-        font.draw(batch, "Score: " + (int) (highscore / 100),
-            camera.position.x - viewport.getWorldWidth() / 2 + 20,
-            camera.position.y + viewport.getWorldHeight() / 2 - 20);
+        font.draw(batch, "Score: " + (int)(highscore/100),
+            camera.position.x - viewport.getWorldWidth()/2 + 20,
+            camera.position.y + viewport.getWorldHeight()/2 - 20);
         batch.end();
-
-        // Game Over Screen
-        if (gameOver) {
-            // Wenn Space gedrückt, neues Spiel starten
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                resetGame();
-                return;
-            }
-
-            // Halbtransparenter schwarzer Hintergrund
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 0, 0, 0.8f);
-            shapeRenderer.rect(
-                camera.position.x - viewport.getWorldWidth() / 2,
-                camera.position.y - viewport.getWorldHeight() / 2,
-                viewport.getWorldWidth(),
-                viewport.getWorldHeight()
-            );
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-            // Game Over Text
-            batch.begin();
-            // Game Over Text zentriert
-            font.getData().setScale(2.0f);
-            String gameOverText = "GAME OVER";
-            GlyphLayout glyphLayout = new GlyphLayout();
-            glyphLayout.setText(font, gameOverText);
-            float gameOverX = camera.position.x - glyphLayout.width / 2;
-            float gameOverY = camera.position.y + 50;
-            font.draw(batch, gameOverText, gameOverX, gameOverY);
-
-            // Neustart Text zentriert
-            font.getData().setScale(1.5f);
-            String restartText = "Drücke SPACE für neues Spiel";
-            glyphLayout.setText(font, restartText);
-            float restartX = camera.position.x - glyphLayout.width / 2;
-            float restartY = camera.position.y - 50;
-            font.draw(batch, restartText, restartX, restartY);
-            batch.end();
-        }
     }
 
     private void resetGame() {
@@ -305,7 +291,10 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shapeRenderer.dispose();
-        font.dispose();  // Font aufräumen
         backgroundTexture.dispose();
+        startButtonTexture.dispose();
+        startButtonPressedTexture.dispose();
+        leaveButtonTexture.dispose();
+        leaveButtonPressedTexture.dispose();
     }
 }

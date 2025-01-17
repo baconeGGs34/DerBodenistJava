@@ -22,3 +22,6 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+assets/images/nobutton.png-autosave.kra
+.gradle/8.11.1/checksums/checksums.lock
+.gradle/8.11.1/checksums/checksums.lock

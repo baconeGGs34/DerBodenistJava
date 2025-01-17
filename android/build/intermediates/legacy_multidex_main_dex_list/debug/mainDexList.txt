@@ -1,0 +1,9 @@
+androidx/multidex/MultiDex$V19.class
+androidx/multidex/MultiDex.class
+androidx/multidex/MultiDexApplication.class
+androidx/multidex/MultiDexExtractor$1.class
+androidx/multidex/MultiDexExtractor$ExtractedDex.class
+androidx/multidex/MultiDexExtractor.class
+androidx/multidex/ZipUtil$CentralDirectory.class
+androidx/multidex/ZipUtil.class
+com/badlogic/gdx/utils/Null.class
