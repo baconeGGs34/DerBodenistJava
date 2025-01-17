@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.nosite.DBIJ.managers.FontManager;
+import io.nosite.DBIJ.managers.PreferencesManager;
 import io.nosite.DBIJ.managers.ScoreManager;
 
 public class GameScreen implements Screen {
@@ -45,8 +46,10 @@ public class GameScreen implements Screen {
     private ScoreManager scoreManager;
     private Texture startButtonTexture;
     private Texture leaveButtonTexture;
-    private Texture leftButtonTexture;
-    private Texture rightButtonTexture;
+    private PreferencesManager prefsManager;
+    private Texture leftButtonTexture, rightButtonTexture;
+    private Rectangle leftButtonBounds, rightButtonBounds;
+    private static final float CONTROL_BUTTON_SIZE = 120;
     private Rectangle startButtonBounds, leaveButtonBounds;
     private static final float BUTTON_WIDTH = 285;  // 3x Originalgröße wie im Menu
     private static final float BUTTON_HEIGHT = 90;
@@ -59,20 +62,36 @@ public class GameScreen implements Screen {
     private float backgroundScrollPosition = 0;
     private static final float SCROLL_SPEED = 30f;
     private static final Color SCORE_COLOR = new Color(1, 1, 0, 1); // Gelb
+    private boolean showTouchControls;
 
     @Override
     public void show() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        player = new Player(MIN_WORLD_WIDTH / 2, 400,false);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
+        prefsManager = new PreferencesManager();
+        font = FontManager.getFont();
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
-        leftButtonTexture = new Texture("images/buttons/buttonleft.png");
-        rightButtonTexture = new Texture("images/buttons/buttonright.png");
-        font = FontManager.getFont();
+        showTouchControls = prefsManager.isAndroid() && !prefsManager.isGyroEnabled();
+
+        if (showTouchControls) {
+            try {
+                leftButtonTexture = new Texture(Gdx.files.internal("images/buttons/buttonleft.png"));
+                rightButtonTexture = new Texture(Gdx.files.internal("images/buttons/buttonright.png"));
+                leftButtonBounds = new Rectangle();
+                rightButtonBounds = new Rectangle();
+                Gdx.app.log("GameScreen", "Android controls initialized");
+            } catch (Exception e) {
+                Gdx.app.log("GameScreen", "Error loading control textures: " + e.getMessage());
+            }
+        }
+
+        player = new Player(MIN_WORLD_WIDTH / 2, 400, prefsManager, camera,
+            leftButtonBounds, rightButtonBounds);
+
 
         font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -128,7 +147,7 @@ public class GameScreen implements Screen {
 
         // Game Over Check
         if (player.getPosition().y < camera.position.y - GAME_OVER_THRESHOLD) {
-            ((Main)Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((int)(highscore/100)));
+            ((Main) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((int) (highscore / 100)));
             return;
         }
 
@@ -139,8 +158,8 @@ public class GameScreen implements Screen {
         }
         updatePlatforms();
 
-        for(Platform platform : platforms) {
-            if(platform instanceof MovingPlatform) {
+        for (Platform platform : platforms) {
+            if (platform instanceof MovingPlatform) {
                 ((MovingPlatform) platform).update(delta);
             }
         }
@@ -148,12 +167,12 @@ public class GameScreen implements Screen {
         // Hintergrund rendern
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
         float offsetY = baseY % bgHeight;
-        for(int i = -1; i < 2; i++) {
+        for (int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth()/2,
+                camera.position.x - viewport.getWorldWidth() / 2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
@@ -164,14 +183,14 @@ public class GameScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth()/2,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x - viewport.getWorldWidth() / 2,
+            camera.position.y - viewport.getWorldHeight() / 2,
             40,
             viewport.getWorldHeight()
         );
         shapeRenderer.rect(
-            camera.position.x + viewport.getWorldWidth()/2 - 40,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x + viewport.getWorldWidth() / 2 - 40,
+            camera.position.y - viewport.getWorldHeight() / 2,
             40,
             viewport.getWorldHeight()
         );
@@ -193,10 +212,65 @@ public class GameScreen implements Screen {
         batch.begin();
         font = FontManager.getFont();
         font.getData().setScale(1.0f);
-        font.draw(batch, "Score: " + (int)(highscore/100),
-            camera.position.x - viewport.getWorldWidth()/2 + 20,
-            camera.position.y + viewport.getWorldHeight()/2 - 20);
+        font.draw(batch, "Score: " + (int) (highscore / 100),
+            camera.position.x - viewport.getWorldWidth() / 2 + 20,
+            camera.position.y + viewport.getWorldHeight() / 2 - 20);
         batch.end();
+
+        // Bewegung updaten
+        updatePlayerMovement();
+
+        // Nur Touch-Controls rendern wenn nötig
+        if (prefsManager.isAndroid() && !prefsManager.isGyroEnabled()) {
+            renderTouchControls();
+        }
+
+    }
+
+
+    private void renderTouchControls() {
+        if (leftButtonTexture != null && rightButtonTexture != null) {
+            batch.begin();
+            batch.setColor(1, 1, 1, 0.5f);
+
+            float leftX = camera.position.x - viewport.getWorldWidth() / 2 + 20;
+            float rightX = camera.position.x + viewport.getWorldWidth() / 2 - CONTROL_BUTTON_SIZE - 20;
+            float buttonY = camera.position.y - viewport.getWorldHeight() / 2 + 20;
+
+            batch.draw(leftButtonTexture, leftX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
+            batch.draw(rightButtonTexture, rightX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
+
+            batch.setColor(1, 1, 1, 1f);
+            batch.end();
+
+            leftButtonBounds.setPosition(leftX, buttonY);
+            rightButtonBounds.setPosition(rightX, buttonY);
+        }
+    }
+
+    private void updatePlayerMovement() {
+        if (prefsManager.isAndroid()) {
+            if (prefsManager.isGyroEnabled()) {
+                // Gyro Steuerung
+                float accelX = Gdx.input.getAccelerometerX();
+                player.setVelocityX(-(accelX / 10.0f) * Player.MOVEMENT_SPEED);
+            } else if (showTouchControls && Gdx.input.isTouched()) {
+                // Button Steuerung
+                Vector3 touchPos = new Vector3();
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                camera.unproject(touchPos);
+
+                if (leftButtonBounds.contains(touchPos.x, touchPos.y)) {
+                    player.setVelocityX(-Player.MOVEMENT_SPEED);
+                } else if (rightButtonBounds.contains(touchPos.x, touchPos.y)) {
+                    player.setVelocityX(Player.MOVEMENT_SPEED);
+                } else {
+                    player.setVelocityX(0);
+                }
+            } else {
+                player.setVelocityX(0);
+            }
+        }
     }
 
     private void resetGame() {
@@ -300,5 +374,7 @@ public class GameScreen implements Screen {
         startButtonPressedTexture.dispose();
         leaveButtonTexture.dispose();
         leaveButtonPressedTexture.dispose();
+        if (leftButtonTexture != null) leftButtonTexture.dispose();
+        if (rightButtonTexture != null) rightButtonTexture.dispose();
     }
 }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
+import io.nosite.DBIJ.managers.PreferencesManager;
 
 public class SettingsScreen implements Screen {
     private SpriteBatch batch;
@@ -43,14 +44,18 @@ public class SettingsScreen implements Screen {
     private boolean soundButtonPressed, gyroButtonPressed, backButtonPressed;
     private boolean soundEnabled = true;
     private boolean gyroEnabled = true;
+    private PreferencesManager prefsManager;
+    private boolean isAndroid;  // Als Klassenvariable
 
     public SettingsScreen() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
+        batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         font = FontManager.getFont();
         glyphLayout = new GlyphLayout();
+        prefsManager = new PreferencesManager();
+        isAndroid = prefsManager.isAndroid();
 
         // Texturen laden
         backgroundTexture = new Texture("images/bg.jpg");
@@ -70,6 +75,7 @@ public class SettingsScreen implements Screen {
         gyroButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.4f, BUTTON_WIDTH, BUTTON_HEIGHT);
         // Back Button wird in render() positioniert
         backButtonBounds = new Rectangle();
+
     }
 
     @Override
@@ -114,6 +120,7 @@ public class SettingsScreen implements Screen {
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
+        // Text und Buttons in einem einzigen batch
         batch.begin();
 
         // Überschrift "Settings"
@@ -153,19 +160,25 @@ public class SettingsScreen implements Screen {
             gyroButtonBounds.x + BUTTON_WIDTH + 20,
             gyroButtonBounds.y + BUTTON_HEIGHT / 2);
 
-        // Buttons zeichnen
+        // Sound Button
         batch.draw(soundEnabled ? soundButtonOnTexture : soundButtonOffTexture,
             soundButtonBounds.x, soundButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
 
+        // Gyro Button
+        if(!isAndroid) {
+            batch.setColor(0.5f, 0.5f, 0.5f, 1f);  // Grau für Desktop
+        }
         batch.draw(gyroEnabled ? gyroButtonOnTexture : gyroButtonOffTexture,
             gyroButtonBounds.x, gyroButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
+        if(!isAndroid) {
+            batch.setColor(Color.WHITE);  // Farbe zurücksetzen
+        }
 
-        // Back Button am unteren Bildschirmrand
+        // Back Button
         batch.draw(backButtonPressed ? backButtonPressedTexture : backButtonTexture,
-            camera.position.x - BUTTON_BACK_WIDTH / 2,  // zentriert
-            camera.position.y - viewport.getWorldHeight() / 2 + 50,  // 50 Pixel vom unteren Rand
+            backButtonBounds.x, backButtonBounds.y,
             BUTTON_BACK_WIDTH, BUTTON_BACK_HEIGHT);
 
         batch.end();
@@ -179,18 +192,19 @@ public class SettingsScreen implements Screen {
         );
 
         // Klick-Erkennung
-        if (Gdx.input.justTouched()) {
+        if(Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
-            if (soundButtonBounds.contains(touchPos.x, touchPos.y)) {
+            if(soundButtonBounds.contains(touchPos.x, touchPos.y)) {
                 soundEnabled = !soundEnabled;
-                // Hier Sound Einstellungen speichern/ändern
-            } else if (gyroButtonBounds.contains(touchPos.x, touchPos.y)) {
+                prefsManager.setSoundEnabled(soundEnabled);
+            } else if(gyroButtonBounds.contains(touchPos.x, touchPos.y) && isAndroid) {
                 gyroEnabled = !gyroEnabled;
-                // Hier Gyro Einstellungen speichern/ändern
-            } else if (backButtonBounds.contains(touchPos.x, touchPos.y)) {
+                prefsManager.setGyroEnabled(gyroEnabled);
+                Gdx.app.log("SettingsScreen", "Gyro enabled: " + gyroEnabled);
+            } else if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
                 backButtonPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
