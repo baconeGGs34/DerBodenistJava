@@ -81,7 +81,7 @@ public class GameScreen implements Screen {
         showTouchControls = prefsManager.isAndroid() && !prefsManager.isGyroEnabled();
 
         platformTexture = new Texture("images/platforms/platform.png");
-        breakableplatformTexture = new Texture("images/platforms/breakableplatform.png");
+        breakableplatformTexture = new Texture("images/platforms/breakeableplatform.png");
         movingplatformTexture = new Texture("images/platforms/movingplatform.png");
 
         if (showTouchControls) {

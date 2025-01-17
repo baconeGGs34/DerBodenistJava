@@ -28,3 +28,6 @@ images/jump3.png
 images/jump4.png
 images/jump5.png
 images/nobuttonpressed.png-autosave.kra
+images/platforms/breakeableplatform.png
+images/platforms/movingplatform.png
+images/platforms/platform.png
