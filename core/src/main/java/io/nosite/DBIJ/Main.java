@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.screens.GameScreen;
 import io.nosite.DBIJ.screens.MenuScreen;
+import io.nosite.DBIJ.screens.SettingsScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {

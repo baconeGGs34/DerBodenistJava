@@ -29,8 +29,10 @@ public class SettingsScreen implements Screen {
     private static final float SCROLL_SPEED = 30f;
     private static final float MIN_WORLD_WIDTH = 480;
     private static final float MIN_WORLD_HEIGHT = 800;
-    private static final float BUTTON_WIDTH = 285;
-    private static final float BUTTON_HEIGHT = 90;
+    private static final float BUTTON_WIDTH = 180;
+    private static final float BUTTON_HEIGHT = 60;
+    private static final float BUTTON_BACK_WIDTH = 160;
+    private static final float BUTTON_BACK_HEIGHT = 80;
     private static final float BUTTON_SPACING = 50;
 
     // Buttons
@@ -45,7 +47,7 @@ public class SettingsScreen implements Screen {
     public SettingsScreen() {
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
+        batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         font = FontManager.getFont();
         glyphLayout = new GlyphLayout();
@@ -56,16 +58,18 @@ public class SettingsScreen implements Screen {
         soundButtonOffTexture = new Texture("images/buttons/offbutton.png");
         gyroButtonOnTexture = new Texture("images/buttons/onbutton.png");
         gyroButtonOffTexture = new Texture("images/buttons/offbutton.png");
-        backButtonTexture = new Texture("images/buttons/buttonleft.png");
-        backButtonPressedTexture = new Texture("images/buttons/buttonleft.png");
+        backButtonTexture = new Texture("images/buttons/leavebutton.png");
+        backButtonPressedTexture = new Texture("images/buttons/leavebuttonpressed.png");
+
 
         // Button-Bereiche initialisieren
-        float centerX = MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2;
-        float topY = MIN_WORLD_HEIGHT/2 + BUTTON_HEIGHT;
-
-        soundButtonBounds = new Rectangle(centerX, topY, BUTTON_WIDTH, BUTTON_HEIGHT);
-        gyroButtonBounds = new Rectangle(centerX, topY - BUTTON_HEIGHT - BUTTON_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButtonBounds = new Rectangle(centerX, topY - (2 * BUTTON_HEIGHT) - (2 * BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT);
+        float centerX = MIN_WORLD_WIDTH / 2 - BUTTON_WIDTH / 2;
+        // Sound Button mittig im oberen Drittel
+        soundButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.6f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        // Gyro Button mittig
+        gyroButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.4f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        // Back Button wird in render() positioniert
+        backButtonBounds = new Rectangle();
     }
 
     @Override
@@ -84,13 +88,13 @@ public class SettingsScreen implements Screen {
         // Scrollender Hintergrund
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
         float offsetY = backgroundScrollPosition % bgHeight;
 
-        for(int i = -1; i < 2; i++) {
+        for (int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth()/2,
+                camera.position.x - viewport.getWorldWidth() / 2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
@@ -102,52 +106,98 @@ public class SettingsScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0, 0, 0.5f);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth()/2,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x - viewport.getWorldWidth() / 2,
+            camera.position.y - viewport.getWorldHeight() / 2,
             viewport.getWorldWidth(),
             viewport.getWorldHeight()
         );
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // Buttons zeichnen
         batch.begin();
-        // Sound Button
+
+        // Überschrift "Settings"
+        font.getData().setScale(3.5f);
+        glyphLayout.setText(font, "SETTINGS");
+        font.draw(batch, "SETTINGS",
+            camera.position.x - glyphLayout.width / 2,
+            camera.position.y + viewport.getWorldHeight() / 2 - 50);
+
+        // Sound Text und Labels
+        font.getData().setScale(2.0f);
+        glyphLayout.setText(font, "SOUND");
+        font.draw(batch, "SOUND",
+            camera.position.x - glyphLayout.width / 2,
+            soundButtonBounds.y + BUTTON_HEIGHT + 50);
+
+        font.getData().setScale(1.4f);
+        font.draw(batch, "ON",
+            soundButtonBounds.x - 50,
+            soundButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "OFF",
+            soundButtonBounds.x + BUTTON_WIDTH + 20,
+            soundButtonBounds.y + BUTTON_HEIGHT / 2);
+
+        // Gyro Text und Labels
+        font.getData().setScale(2.0f);
+        glyphLayout.setText(font, "Controls");
+        font.draw(batch, "Controls",
+            camera.position.x - glyphLayout.width / 2,
+            gyroButtonBounds.y + BUTTON_HEIGHT + 50);
+
+        font.getData().setScale(1.4f);
+        font.draw(batch, "Gyro",
+            gyroButtonBounds.x - 85,
+            gyroButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "Buttons",
+            gyroButtonBounds.x + BUTTON_WIDTH + 20,
+            gyroButtonBounds.y + BUTTON_HEIGHT / 2);
+
+        // Buttons zeichnen
         batch.draw(soundEnabled ? soundButtonOnTexture : soundButtonOffTexture,
             soundButtonBounds.x, soundButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        // Gyro Button
         batch.draw(gyroEnabled ? gyroButtonOnTexture : gyroButtonOffTexture,
             gyroButtonBounds.x, gyroButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        // Back Button
+        // Back Button am unteren Bildschirmrand
         batch.draw(backButtonPressed ? backButtonPressedTexture : backButtonTexture,
-            backButtonBounds.x, backButtonBounds.y,
-            BUTTON_WIDTH, BUTTON_HEIGHT);
+            camera.position.x - BUTTON_BACK_WIDTH / 2,  // zentriert
+            camera.position.y - viewport.getWorldHeight() / 2 + 50,  // 50 Pixel vom unteren Rand
+            BUTTON_BACK_WIDTH, BUTTON_BACK_HEIGHT);
+
         batch.end();
 
+        // Back Button Bounds aktualisieren
+        backButtonBounds.set(
+            camera.position.x - BUTTON_BACK_WIDTH / 2,
+            camera.position.y - viewport.getWorldHeight() / 2 + 50,
+            BUTTON_BACK_WIDTH,
+            BUTTON_BACK_HEIGHT
+        );
+
         // Klick-Erkennung
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
-            if(soundButtonBounds.contains(touchPos.x, touchPos.y)) {
+            if (soundButtonBounds.contains(touchPos.x, touchPos.y)) {
                 soundEnabled = !soundEnabled;
                 // Hier Sound Einstellungen speichern/ändern
-            } else if(gyroButtonBounds.contains(touchPos.x, touchPos.y)) {
+            } else if (gyroButtonBounds.contains(touchPos.x, touchPos.y)) {
                 gyroEnabled = !gyroEnabled;
                 // Hier Gyro Einstellungen speichern/ändern
-            } else if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
+            } else if (backButtonBounds.contains(touchPos.x, touchPos.y)) {
                 backButtonPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Main) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                     }
-                }, 0.1f);
+                }, 0.2f);
             }
         }
     }
@@ -170,14 +220,18 @@ public class SettingsScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 }
