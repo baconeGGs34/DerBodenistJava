@@ -66,6 +66,11 @@ public class GameScreen implements Screen {
     private static final float SCROLL_SPEED = 30f;
     private static final Color SCORE_COLOR = new Color(1, 1, 0, 1); // Gelb
     private boolean showTouchControls;
+    private Texture pauseButtonTexture;
+    private Texture pauseButtonPressedTexture;
+    private Rectangle pauseButtonBounds;
+    private static final float PAUSE_BUTTON_SIZE = 50;  // Größe anpassen nach Bedarf
+    private boolean isPaused = false;
 
     @Override
     public void show() {
@@ -79,6 +84,10 @@ public class GameScreen implements Screen {
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
         showTouchControls = prefsManager.isAndroid() && !prefsManager.isGyroEnabled();
+
+        pauseButtonTexture = new Texture("images/buttons/buttonpause.png");
+        pauseButtonPressedTexture = new Texture("images/buttons/buttonpausepressed.png");
+        pauseButtonBounds = new Rectangle();
 
         platformTexture = new Texture("images/platforms/platform.png");
         breakableplatformTexture = new Texture("images/platforms/breakeableplatform.png");
@@ -224,12 +233,30 @@ public class GameScreen implements Screen {
             camera.position.y + viewport.getWorldHeight() / 2 - 20);
         batch.end();
 
+        // Pausebutton
+        batch.begin();
+        float pauseX = camera.position.x + viewport.getWorldWidth()/2 - PAUSE_BUTTON_SIZE - 20;
+        float pauseY = camera.position.y + viewport.getWorldHeight()/2 - PAUSE_BUTTON_SIZE - 20;
+        batch.draw(pauseButtonTexture, pauseX, pauseY, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+        pauseButtonBounds.set(pauseX, pauseY, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+        batch.end();
+
         // Bewegung updaten
         updatePlayerMovement();
 
         // Nur Touch-Controls rendern wenn nötig
         if (prefsManager.isAndroid() && !prefsManager.isGyroEnabled()) {
             renderTouchControls();
+        }
+
+        if(Gdx.input.justTouched()) {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+
+            if(pauseButtonBounds.contains(touchPos.x, touchPos.y)) {
+                ((Main)Gdx.app.getApplicationListener()).setScreen(new PauseScreen(this));
+            }
         }
 
     }

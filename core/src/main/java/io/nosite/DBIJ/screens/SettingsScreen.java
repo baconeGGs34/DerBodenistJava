@@ -35,6 +35,7 @@ public class SettingsScreen implements Screen {
     private static final float BUTTON_BACK_WIDTH = 160;
     private static final float BUTTON_BACK_HEIGHT = 80;
     private static final float BUTTON_SPACING = 50;
+    private Screen previousScreen;
 
     // Buttons
     private Texture soundButtonOnTexture, soundButtonOffTexture;
@@ -56,6 +57,7 @@ public class SettingsScreen implements Screen {
         glyphLayout = new GlyphLayout();
         prefsManager = new PreferencesManager();
         isAndroid = prefsManager.isAndroid();
+
 
         gyroEnabled = prefsManager.isGyroEnabled();
 
@@ -79,6 +81,10 @@ public class SettingsScreen implements Screen {
         backButtonBounds = new Rectangle();
 
     }
+    public SettingsScreen(Screen previousScreen) {
+        this.previousScreen = previousScreen;
+    }
+
 
     @Override
     public void render(float delta) {
@@ -211,7 +217,7 @@ public class SettingsScreen implements Screen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(previousScreen);
                     }
                 }, 0.2f);
             }
