@@ -219,7 +219,7 @@ public class SettingsScreen implements Screen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(previousScreen);
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                     }
                 }, 0.1f);
             }
