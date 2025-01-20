@@ -36,6 +36,7 @@ public class SettingsScreen implements Screen {
     private static final float BUTTON_BACK_HEIGHT = 80;
     private static final float BUTTON_SPACING = 50;
     private Screen previousScreen;
+    private GameScreen gameScreen;
 
     // Buttons
     private Texture soundButtonOnTexture, soundButtonOffTexture;
@@ -81,8 +82,9 @@ public class SettingsScreen implements Screen {
         backButtonBounds = new Rectangle();
 
     }
-    public SettingsScreen(Screen previousScreen) {
+    public SettingsScreen(Screen previousScreen, GameScreen gameScreen) {
         this.previousScreen = previousScreen;
+        this.gameScreen = gameScreen;
     }
 
 
@@ -212,14 +214,14 @@ public class SettingsScreen implements Screen {
                 gyroEnabled = !gyroEnabled;
                 prefsManager.setGyroEnabled(gyroEnabled);
                 Gdx.app.log("SettingsScreen", "Gyro enabled: " + gyroEnabled);
-            } else if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
+            } else     if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
                 backButtonPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
                         ((Main)Gdx.app.getApplicationListener()).setScreen(previousScreen);
                     }
-                }, 0.2f);
+                }, 0.1f);
             }
         }
     }

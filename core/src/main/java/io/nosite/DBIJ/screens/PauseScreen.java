@@ -2,15 +2,20 @@ package io.nosite.DBIJ.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
+import io.nosite.DBIJ.managers.FontManager;
 
 public class PauseScreen implements Screen {
     private SpriteBatch batch;
@@ -32,23 +37,73 @@ public class PauseScreen implements Screen {
     private Texture quitButtonTexture, quitButtonPressedTexture;
     private Rectangle resumeBounds, settingsBounds, quitBounds;
     private boolean resumePressed, settingsPressed, quitPressed;
-    private GameScreen gameScreen;  // Referenz zum GameScreen
+    private GameScreen gameScreen;
 
     public PauseScreen(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
-        // ... Rest der Initialisierung wie im MenuScreen ...
-    }
+        camera = new OrthographicCamera();
+        viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
+        batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
+        shapeRenderer = new ShapeRenderer();
+        font = FontManager.getFont();
 
-    @Override
-    public void show() {
+        // Texturen laden
+        backgroundTexture = new Texture("images/bg.jpg");
+        resumeButtonTexture = new Texture("images/buttons/startbutton.png");
+        resumeButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
+        settingsButtonTexture = new Texture("images/buttons/settingsbutton.png");
+        settingsButtonPressedTexture = new Texture("images/buttons/settingsbuttonpressed.png");
+        quitButtonTexture = new Texture("images/buttons/quitbutton.png");
+        quitButtonPressedTexture = new Texture("images/buttons/quitbuttonpressed.png");
 
+        // Bounds initialisieren
+        float centerX = MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2;
+        float topY = MIN_WORLD_HEIGHT * 0.7f;
+        resumeBounds = new Rectangle(centerX, topY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        settingsBounds = new Rectangle(centerX, topY - BUTTON_HEIGHT - BUTTON_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT);
+        quitBounds = new Rectangle(centerX, topY - (2 * BUTTON_HEIGHT) - (2 * BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT);
     }
 
     @Override
     public void render(float delta) {
-        // Hintergrund und Overlay wie im MenuScreen
+        backgroundScrollPosition += SCROLL_SPEED * delta;
 
-        // Buttons zentriert untereinander
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        // Scrollender Hintergrund
+        batch.begin();
+        float bgHeight = backgroundTexture.getHeight();
+        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        float offsetY = backgroundScrollPosition % bgHeight;
+
+        for(int i = -1; i < 2; i++) {
+            float y = baseY - offsetY + (i * bgHeight);
+            batch.draw(backgroundTexture,
+                camera.position.x - viewport.getWorldWidth()/2,
+                y,
+                viewport.getWorldWidth(),
+                bgHeight);
+        }
+        batch.end();
+
+        // Overlay
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 0.5f);
+        shapeRenderer.rect(
+            camera.position.x - viewport.getWorldWidth()/2,
+            camera.position.y - viewport.getWorldHeight()/2,
+            viewport.getWorldWidth(),
+            viewport.getWorldHeight()
+        );
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
         batch.begin();
         float centerX = MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2;
         float topY = MIN_WORLD_HEIGHT * 0.7f;
@@ -67,45 +122,66 @@ public class PauseScreen implements Screen {
             BUTTON_WIDTH, BUTTON_HEIGHT);
         batch.end();
 
-        // Button Logik
         if(Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
             if(resumeBounds.contains(touchPos.x, touchPos.y)) {
-                ((Main)Gdx.app.getApplicationListener()).setScreen(gameScreen);
-            } else if(settingsBounds.contains(touchPos.x, touchPos.y)) {
-                ((Main)Gdx.app.getApplicationListener()).setScreen(
-                    new SettingsScreen(this));  // PauseScreen als previous screen
+                resumePressed = true;
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(gameScreen);
+                    }
+                }, 0.1f);
+            }else if(settingsBounds.contains(touchPos.x, touchPos.y)) {
+                settingsPressed = true;
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(PauseScreen.this, gameScreen));
+                    }
+                }, 0.1f);
+
             } else if(quitBounds.contains(touchPos.x, touchPos.y)) {
-                ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                quitPressed = true;
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                    }
+                }, 0.1f);
             }
         }
     }
 
     @Override
     public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
+        viewport.update(width, height, true);
     }
 
     @Override
     public void dispose() {
-
+        shapeRenderer.dispose();
+        backgroundTexture.dispose();
+        resumeButtonTexture.dispose();
+        resumeButtonPressedTexture.dispose();
+        settingsButtonTexture.dispose();
+        settingsButtonPressedTexture.dispose();
+        quitButtonTexture.dispose();
+        quitButtonPressedTexture.dispose();
     }
+
+    @Override
+    public void show() {}
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {}
 }

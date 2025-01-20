@@ -255,6 +255,7 @@ public class GameScreen implements Screen {
             camera.unproject(touchPos);
 
             if(pauseButtonBounds.contains(touchPos.x, touchPos.y)) {
+                Gdx.app.log("GameScreen", "Opening pause screen");  // Debug output
                 ((Main)Gdx.app.getApplicationListener()).setScreen(new PauseScreen(this));
             }
         }
