@@ -1,4 +1,0 @@
-io.nosite.DBIJ.test.android-androidTest-0 C:\Java\DBIJ\android\build\generated\res\resValues\androidTest\debug
-io.nosite.DBIJ.test.android-mergeDebugAndroidTestResources-1 C:\Java\DBIJ\android\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-io.nosite.DBIJ.test.android-mergeDebugAndroidTestResources-2 C:\Java\DBIJ\android\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-io.nosite.DBIJ.test.android-merged_res-3 C:\Java\DBIJ\android\build\intermediates\merged_res\debugAndroidTest
