@@ -57,6 +57,8 @@ public class SettingsScreen implements Screen {
         prefsManager = new PreferencesManager();
         isAndroid = prefsManager.isAndroid();
 
+        gyroEnabled = prefsManager.isGyroEnabled();
+
         // Texturen laden
         backgroundTexture = new Texture("images/bg.jpg");
         soundButtonOnTexture = new Texture("images/buttons/onbutton.png");

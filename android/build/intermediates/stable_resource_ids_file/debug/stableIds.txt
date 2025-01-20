@@ -1,4 +1,0 @@
-io.nosite.DBIJ:string/app_name = 0x7f030000
-io.nosite.DBIJ:style/GdxTheme = 0x7f040000
-io.nosite.DBIJ:drawable/ic_launcher = 0x7f020000
-io.nosite.DBIJ:color/ic_background_color = 0x7f010000

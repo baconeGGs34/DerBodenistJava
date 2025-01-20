@@ -236,13 +236,13 @@ public class GameScreen implements Screen {
 
 
     private void renderTouchControls() {
-        if (leftButtonTexture != null && rightButtonTexture != null) {
+        if (!prefsManager.isGyroEnabled() && leftButtonTexture != null && rightButtonTexture != null) {
             batch.begin();
             batch.setColor(1, 1, 1, 0.5f);
 
-            float leftX = camera.position.x - viewport.getWorldWidth() / 2 + 20;
-            float rightX = camera.position.x + viewport.getWorldWidth() / 2 - CONTROL_BUTTON_SIZE - 20;
-            float buttonY = camera.position.y - viewport.getWorldHeight() / 2 + 20;
+            float leftX = camera.position.x - viewport.getWorldWidth()/2 + 20;
+            float rightX = camera.position.x + viewport.getWorldWidth()/2 - CONTROL_BUTTON_SIZE - 20;
+            float buttonY = camera.position.y - viewport.getWorldHeight()/2 + 20;
 
             batch.draw(leftButtonTexture, leftX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
             batch.draw(rightButtonTexture, rightX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
@@ -250,8 +250,9 @@ public class GameScreen implements Screen {
             batch.setColor(1, 1, 1, 1f);
             batch.end();
 
-            leftButtonBounds.setPosition(leftX, buttonY);
-            rightButtonBounds.setPosition(rightX, buttonY);
+            // WICHTIG: Button-Bounds aktualisieren
+            leftButtonBounds.set(leftX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
+            rightButtonBounds.set(rightX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
         }
     }
 
@@ -261,20 +262,24 @@ public class GameScreen implements Screen {
                 // Gyro Steuerung
                 float accelX = Gdx.input.getAccelerometerX();
                 player.setVelocityX(-(accelX / 10.0f) * Player.MOVEMENT_SPEED);
-            } else if (showTouchControls && Gdx.input.isTouched()) {
-                // Button Steuerung
-                Vector3 touchPos = new Vector3();
-                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                camera.unproject(touchPos);
-
-                if (leftButtonBounds.contains(touchPos.x, touchPos.y)) {
-                    player.setVelocityX(-Player.MOVEMENT_SPEED);
-                } else if (rightButtonBounds.contains(touchPos.x, touchPos.y)) {
-                    player.setVelocityX(Player.MOVEMENT_SPEED);
-                } else {
-                    player.setVelocityX(0);
-                }
             } else {
+                // Button Steuerung
+                if (Gdx.input.isTouched()) {
+                    Vector3 touchPos = new Vector3();
+                    touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                    camera.unproject(touchPos);
+
+                    if (leftButtonBounds != null && rightButtonBounds != null) {
+                        if (leftButtonBounds.contains(touchPos.x, touchPos.y)) {
+                            player.setVelocityX(-Player.MOVEMENT_SPEED);
+                            return;  // Wichtig: Früher Return wenn Button gedrückt
+                        } else if (rightButtonBounds.contains(touchPos.x, touchPos.y)) {
+                            player.setVelocityX(Player.MOVEMENT_SPEED);
+                            return;  // Wichtig: Früher Return wenn Button gedrückt
+                        }
+                    }
+                }
+                // Wenn kein Button gedrückt wird, Geschwindigkeit auf 0 setzen
                 player.setVelocityX(0);
             }
         }
@@ -312,6 +317,8 @@ public class GameScreen implements Screen {
             nextY += MathUtils.random(110, 150);
         }
     }
+
+
 
     private void updatePlatforms() {
         float margin = 40f;

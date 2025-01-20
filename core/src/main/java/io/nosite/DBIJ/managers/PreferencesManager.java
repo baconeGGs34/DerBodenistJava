@@ -35,11 +35,13 @@ public class PreferencesManager {
 
     public void setGyroEnabled(boolean enabled) {
         prefs.putBoolean(GYRO_ENABLED, enabled);
-        prefs.flush();
-        Gdx.app.log("PreferencesManager", "Gyro set to: " + enabled);
+        prefs.flush();  // Wichtig: Sofortiges Speichern erzwingen
+        Gdx.app.log("PreferencesManager", "Gyro setting saved: " + enabled);
     }
 
     public boolean isGyroEnabled() {
-        return prefs.getBoolean(GYRO_ENABLED, false);
+        boolean value = prefs.getBoolean(GYRO_ENABLED, true);  // Default auf Gyro
+        Gdx.app.log("PreferencesManager", "Gyro setting loaded: " + value);
+        return value;
     }
 }
