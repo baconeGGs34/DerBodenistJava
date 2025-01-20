@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 public class Platform {
     protected Rectangle bounds;
     private static final float PLATFORM_WIDTH = 60;
-    private static final float PLATFORM_HEIGHT = 8;
+    private static final float PLATFORM_HEIGHT = 15;
     private Texture platformTexture;
 
     public Platform(float x, float y) {

@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
     private Texture backgroundTexture;
+    private Texture wallTexture;
     private Texture platformTexture;
     private Texture breakableplatformTexture;
     private Texture movingplatformTexture;
@@ -92,6 +93,8 @@ public class GameScreen implements Screen {
         platformTexture = new Texture("images/platforms/platform.png");
         breakableplatformTexture = new Texture("images/platforms/breakeableplatform.png");
         movingplatformTexture = new Texture("images/platforms/movingplatform.png");
+
+        wallTexture = new Texture(Gdx.files.internal("images/wallbrick1.png"));
 
         if (showTouchControls) {
             try {
@@ -196,28 +199,51 @@ public class GameScreen implements Screen {
         batch.end();
 
         // Ränder zeichnen
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.DARK_GRAY);
-        shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth() / 2,
-            camera.position.y - viewport.getWorldHeight() / 2,
-            40,
-            viewport.getWorldHeight()
-        );
-        shapeRenderer.rect(
-            camera.position.x + viewport.getWorldWidth() / 2 - 40,
-            camera.position.y - viewport.getWorldHeight() / 2,
-            40,
-            viewport.getWorldHeight()
-        );
-        shapeRenderer.end();
+        batch.begin();
+        float borderWidth = 40f;
+        float wallHeight = wallTexture.getHeight();
+        baseY = camera.position.y - viewport.getWorldHeight() / 2;
+        offsetY = baseY % wallHeight;
+
+// Calculate how many wall texture tiles we need to cover the screen height
+        int tilesNeeded = (int) Math.ceil(viewport.getWorldHeight() / wallHeight) + 2;
+
+// Left border
+        for (int i = -1; i < tilesNeeded; i++) {
+            float y = baseY - offsetY + (i * wallHeight);
+            batch.draw(wallTexture,
+                camera.position.x - viewport.getWorldWidth() / 2,
+                y,
+                borderWidth,
+                wallHeight);
+        }
+
+// Right border
+        for (int i = -1; i < tilesNeeded; i++) {
+            float y = baseY - offsetY + (i * wallHeight);
+            batch.draw(wallTexture,
+                camera.position.x + viewport.getWorldWidth() / 2 - borderWidth,
+                y,
+                borderWidth,
+                wallHeight);
+        }
+        batch.end();
 
         // Plattformen rendern
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        batch.begin();
         for (Platform platform : platforms) {
-            platform.render(shapeRenderer);
+            if (platform instanceof BreakablePlatform) {
+                batch.draw(breakableplatformTexture, platform.getBounds().x, platform.getBounds().y,
+                    platform.getBounds().width, platform.getBounds().height);
+            } else if (platform instanceof MovingPlatform) {
+                batch.draw(movingplatformTexture, platform.getBounds().x, platform.getBounds().y,
+                    platform.getBounds().width, platform.getBounds().height);
+            } else {
+                batch.draw(platformTexture, platform.getBounds().x, platform.getBounds().y,
+                    platform.getBounds().width, platform.getBounds().height);
+            }
         }
-        shapeRenderer.end();
+        batch.end();
 
         // Player rendern
         batch.begin();
@@ -416,6 +442,7 @@ public class GameScreen implements Screen {
         startButtonPressedTexture.dispose();
         leaveButtonTexture.dispose();
         leaveButtonPressedTexture.dispose();
+        wallTexture.dispose();
         if (leftButtonTexture != null) leftButtonTexture.dispose();
         if (rightButtonTexture != null) rightButtonTexture.dispose();
     }
