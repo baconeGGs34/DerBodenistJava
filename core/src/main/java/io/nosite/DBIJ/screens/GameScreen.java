@@ -205,10 +205,9 @@ public class GameScreen implements Screen {
         baseY = camera.position.y - viewport.getWorldHeight() / 2;
         offsetY = baseY % wallHeight;
 
-// Calculate how many wall texture tiles we need to cover the screen height
         int tilesNeeded = (int) Math.ceil(viewport.getWorldHeight() / wallHeight) + 2;
 
-// Left border
+        // Left border
         for (int i = -1; i < tilesNeeded; i++) {
             float y = baseY - offsetY + (i * wallHeight);
             batch.draw(wallTexture,
@@ -218,7 +217,7 @@ public class GameScreen implements Screen {
                 wallHeight);
         }
 
-// Right border
+        // Right border
         for (int i = -1; i < tilesNeeded; i++) {
             float y = baseY - offsetY + (i * wallHeight);
             batch.draw(wallTexture,
@@ -261,8 +260,8 @@ public class GameScreen implements Screen {
 
         // Pausebutton
         batch.begin();
-        float pauseX = camera.position.x + viewport.getWorldWidth()/2 - PAUSE_BUTTON_SIZE - 20;
-        float pauseY = camera.position.y + viewport.getWorldHeight()/2 - PAUSE_BUTTON_SIZE - 20;
+        float pauseX = camera.position.x + viewport.getWorldWidth() / 2 - PAUSE_BUTTON_SIZE - 20;
+        float pauseY = camera.position.y + viewport.getWorldHeight() / 2 - PAUSE_BUTTON_SIZE - 20;
         batch.draw(pauseButtonTexture, pauseX, pauseY, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
         pauseButtonBounds.set(pauseX, pauseY, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
         batch.end();
@@ -275,14 +274,14 @@ public class GameScreen implements Screen {
             renderTouchControls();
         }
 
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
-            if(pauseButtonBounds.contains(touchPos.x, touchPos.y)) {
+            if (pauseButtonBounds.contains(touchPos.x, touchPos.y)) {
                 Gdx.app.log("GameScreen", "Opening pause screen");  // Debug output
-                ((Main)Gdx.app.getApplicationListener()).setScreen(new PauseScreen(this));
+                ((Main) Gdx.app.getApplicationListener()).setScreen(new PauseScreen(this));
             }
         }
 
@@ -294,9 +293,9 @@ public class GameScreen implements Screen {
             batch.begin();
             batch.setColor(1, 1, 1, 0.5f);
 
-            float leftX = camera.position.x - viewport.getWorldWidth()/2 + 20;
-            float rightX = camera.position.x + viewport.getWorldWidth()/2 - CONTROL_BUTTON_SIZE - 20;
-            float buttonY = camera.position.y - viewport.getWorldHeight()/2 + 20;
+            float leftX = camera.position.x - viewport.getWorldWidth() / 2 + 20;
+            float rightX = camera.position.x + viewport.getWorldWidth() / 2 - CONTROL_BUTTON_SIZE - 20;
+            float buttonY = camera.position.y - viewport.getWorldHeight() / 2 + 20;
 
             batch.draw(leftButtonTexture, leftX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
             batch.draw(rightButtonTexture, rightX, buttonY, CONTROL_BUTTON_SIZE, CONTROL_BUTTON_SIZE);
@@ -371,7 +370,6 @@ public class GameScreen implements Screen {
             nextY += MathUtils.random(110, 150);
         }
     }
-
 
 
     private void updatePlatforms() {
