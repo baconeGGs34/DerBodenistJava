@@ -1,6 +1,7 @@
 .gitkeep
 fonts/ThaleahFat.ttf
 images/bg.jpg
+images/bg2.jpg
 images/bg3.jpg
 images/buttons/Pixel Art Buttons.png
 images/buttons/buttonleft.png

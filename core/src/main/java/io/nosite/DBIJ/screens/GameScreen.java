@@ -116,7 +116,7 @@ public class GameScreen implements Screen {
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/bg.jpg"));
+        backgroundTexture = new Texture(Gdx.files.internal("images/bg2.jpg"));
         backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         float margin = 40f;
