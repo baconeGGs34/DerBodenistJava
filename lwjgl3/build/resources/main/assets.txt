@@ -1,5 +1,8 @@
 .gitkeep
 fonts/ThaleahFat.ttf
+images/IntroImage.ico
+images/IntroImage.jpg
+images/IntroImage.png
 images/IntroImage.webp
 images/bg.jpg
 images/bg2.jpg
