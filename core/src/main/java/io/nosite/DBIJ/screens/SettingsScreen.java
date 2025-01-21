@@ -45,10 +45,11 @@ public class SettingsScreen implements Screen {
     private Texture backButtonTexture, backButtonPressedTexture;
     private Rectangle soundButtonBounds, gyroButtonBounds, backButtonBounds;
     private boolean soundButtonPressed, gyroButtonPressed, backButtonPressed;
-    private boolean soundEnabled = true;
+    private boolean soundEnabled;
     private boolean gyroEnabled = true;
     private PreferencesManager prefsManager;
     private boolean isAndroid;  // Als Klassenvariable
+
 
     public SettingsScreen() {
         camera = new OrthographicCamera();
@@ -57,7 +58,8 @@ public class SettingsScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         font = FontManager.getFont();
         glyphLayout = new GlyphLayout();
-        PreferencesManager prefsManager = PreferencesManager.getInstance();
+        prefsManager = PreferencesManager.getInstance();
+        soundEnabled = prefsManager.isSoundEnabled();
         isAndroid = prefsManager.isAndroid();
 
 
@@ -211,8 +213,9 @@ public class SettingsScreen implements Screen {
 
             if(soundButtonBounds.contains(touchPos.x, touchPos.y)) {
                 soundEnabled = !soundEnabled;
+                prefsManager.setSoundEnabled(soundEnabled);
                 SoundManager.setSoundEnabled(soundEnabled);
-//                prefsManager.setSoundEnabled(soundEnabled);
+                Gdx.app.log("SettingsScreen", "Sound toggled to: " + soundEnabled);
             } else if(gyroButtonBounds.contains(touchPos.x, touchPos.y) && isAndroid) {
                 gyroEnabled = !gyroEnabled;
                 prefsManager.setGyroEnabled(gyroEnabled);

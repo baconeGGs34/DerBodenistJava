@@ -28,7 +28,13 @@ public class PreferencesManager {
     private PreferencesManager() {
         prefs = Gdx.app.getPreferences(PREF_NAME);
         isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
-        Gdx.app.log("PreferencesManager", "Constructor called");
+//        Gdx.app.log("PreferencesManager", "Constructor called");
+
+        if (!prefs.contains(SOUND_ENABLED)) {
+            prefs.putBoolean(SOUND_ENABLED, true);
+            prefs.flush();
+        }
+        Gdx.app.log("PreferencesManager", "Sound enabled on init: " + isSoundEnabled());
     }
 
     // Singleton getInstance Methode

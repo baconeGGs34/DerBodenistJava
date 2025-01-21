@@ -76,13 +76,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        prefsManager = PreferencesManager.getInstance();  // Klassenfeld initialisieren
         SoundManager.playGameMusic();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
-        PreferencesManager prefsManager = PreferencesManager.getInstance();
         font = FontManager.getFont();
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
@@ -443,6 +443,7 @@ public class GameScreen implements Screen {
         leaveButtonTexture.dispose();
         leaveButtonPressedTexture.dispose();
         wallTexture.dispose();
+        SoundManager.stopMusic();
         if (leftButtonTexture != null) leftButtonTexture.dispose();
         if (rightButtonTexture != null) rightButtonTexture.dispose();
     }

@@ -29,6 +29,11 @@ public class SoundManager {
         epicMusic.setLooping(true);
         gameMusic.setLooping(true);
 
+        if (prefsManager.isSoundEnabled()) {
+            Gdx.app.log("SoundManager", "Starting initial music");
+            playEpicMusic();
+        }
+
         // Debug-Ausgabe hinzufügen
         Gdx.app.log("SoundManager", "Sound enabled status: " + prefsManager.isSoundEnabled());
 
@@ -48,20 +53,24 @@ public class SoundManager {
     }
 
     public static void playEpicMusic() {
-        Gdx.app.log("SoundManager", "Attempting to play epic music. Sound enabled: " + prefsManager.isSoundEnabled());
         if (prefsManager.isSoundEnabled()) {
-            gameMusic.stop();
-            epicMusic.play();
-            Gdx.app.log("SoundManager", "Epic music started");
+            if (gameMusic != null) {
+                gameMusic.stop();
+            }
+            if (epicMusic != null) {
+                epicMusic.play();
+            }
         }
     }
 
     public static void playGameMusic() {
-        Gdx.app.log("SoundManager", "Attempting to play game music. Sound enabled: " + prefsManager.isSoundEnabled());
         if (prefsManager.isSoundEnabled()) {
-            epicMusic.stop();
-            gameMusic.play();
-            Gdx.app.log("SoundManager", "Game music started");
+            if (epicMusic != null) {
+                epicMusic.stop();
+            }
+            if (gameMusic != null) {
+                gameMusic.play();
+            }
         }
     }
 
@@ -82,8 +91,12 @@ public class SoundManager {
         }
     }
     public static void stopMusic() {
-        epicMusic.stop();
-        gameMusic.stop();
+        if (epicMusic != null) {
+            epicMusic.stop();
+        }
+        if (gameMusic != null) {
+            gameMusic.stop();
+        }
     }
 
     public static void resumeMusic() {
