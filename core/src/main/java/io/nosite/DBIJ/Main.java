@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.screens.GameScreen;
+import io.nosite.DBIJ.screens.IntroScreen;
 import io.nosite.DBIJ.screens.MenuScreen;
 import io.nosite.DBIJ.screens.SettingsScreen;
 
@@ -17,7 +18,7 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         FontManager.initialize();
-        setScreen(new MenuScreen());
+        setScreen(new IntroScreen());
     }
 
     @Override

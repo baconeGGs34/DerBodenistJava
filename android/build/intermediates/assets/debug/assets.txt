@@ -34,6 +34,7 @@ images/jump2.png
 images/jump3.png
 images/jump4.png
 images/jump5.png
+images/logos/IntroImage.png
 images/logos/libgdx128.png
 images/logos/libgdx16.png
 images/logos/libgdx32.png
