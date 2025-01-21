@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.managers.PreferencesManager;
 import io.nosite.DBIJ.managers.ScoreManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class GameScreen implements Screen {
 
@@ -75,6 +76,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        SoundManager.playGameMusic();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();

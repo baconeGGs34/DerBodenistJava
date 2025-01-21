@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.managers.ScoreManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class GameOverScreen implements Screen {
     private final int finalScore;
@@ -54,6 +55,7 @@ public class GameOverScreen implements Screen {
         this.shapeRenderer = new ShapeRenderer();
         this.scoreManager = new ScoreManager();
         this.font = FontManager.getFont();
+        SoundManager.playGameOverSound();
 
         // Lade Texturen
         backgroundTexture = new Texture("images/bg.jpg");

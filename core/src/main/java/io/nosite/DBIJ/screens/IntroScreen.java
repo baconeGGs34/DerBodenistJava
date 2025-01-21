@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class IntroScreen implements Screen {
     private SpriteBatch batch;
@@ -37,6 +38,7 @@ public class IntroScreen implements Screen {
         // Zum Hauptmenü wechseln nach DISPLAY_TIME oder bei Touch
         if ((timer >= DISPLAY_TIME || Gdx.input.justTouched()) && !isTransitioning) {
             isTransitioning = true;
+            SoundManager.playEpicMusic(); // Hier wird die Epic-Musik gestartet
             ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
             return;
         }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.nosite.DBIJ.managers.PreferencesManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class Player {
 
@@ -162,6 +163,7 @@ public class Player {
                             currentFrame = 0;
                             stateTime = 0;
                             isJumping = true;
+                            SoundManager.playJumpSound();
                         }
                     } else {
                         // Normale Plattform-Kollision
@@ -171,6 +173,7 @@ public class Player {
                         currentFrame = 0;
                         stateTime = 0;
                         isJumping = true;
+                        SoundManager.playJumpSound();
                     }
                     break;
                 }

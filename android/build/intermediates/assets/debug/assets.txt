@@ -44,3 +44,6 @@ images/platforms/breakeableplatform.png
 images/platforms/movingplatform.png
 images/platforms/platform.png
 images/wallbrick1.png
+sounds/epic_music.mp3
+sounds/game_music.mp3
+sounds/jump_sound.wav

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.managers.PreferencesManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class SettingsScreen implements Screen {
     private SpriteBatch batch;
@@ -210,6 +211,7 @@ public class SettingsScreen implements Screen {
 
             if(soundButtonBounds.contains(touchPos.x, touchPos.y)) {
                 soundEnabled = !soundEnabled;
+                SoundManager.setSoundEnabled(soundEnabled);
                 prefsManager.setSoundEnabled(soundEnabled);
             } else if(gyroButtonBounds.contains(touchPos.x, touchPos.y) && isAndroid) {
                 gyroEnabled = !gyroEnabled;
