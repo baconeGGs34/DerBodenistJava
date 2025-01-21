@@ -1,5 +1,6 @@
 package io.nosite.DBIJ.screens;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -50,6 +51,7 @@ public class MenuScreen implements Screen {
     private static final float VERTICAL_SPACING = BUTTON_HEIGHT + 20;  // Buttonhöhe + 20px Abstand
     private ScoreManager scoreManager;
     private BitmapFont font;
+    private ShapeRenderer shapeRenderer;
 
 
     public MenuScreen() {
@@ -57,6 +59,7 @@ public class MenuScreen implements Screen {
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
         batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
         scoreManager = new ScoreManager();
+        shapeRenderer = new ShapeRenderer();
 
         // Rectangles initialisieren
         startBounds = new Rectangle();
@@ -106,7 +109,7 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
 
         GlyphLayout glyphLayout = new GlyphLayout();
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
+
         // Hintergrund-Scroll aktualisieren
         backgroundScrollPosition += SCROLL_SPEED * delta;
 
@@ -134,13 +137,14 @@ public class MenuScreen implements Screen {
 
         // Halbtransparente Overlay-Schicht
         Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0, 0, 0.5f);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth()/2,
-            camera.position.y - viewport.getWorldHeight()/2,
-            viewport.getWorldWidth(),
-            viewport.getWorldHeight()
+            camera.position.x - viewport.getWorldWidth()/2,  // x-Position
+            camera.position.y - viewport.getWorldHeight()/2, // y-Position
+            viewport.getWorldWidth(),    // Breite
+            viewport.getWorldHeight()    // Höhe
         );
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -148,7 +152,7 @@ public class MenuScreen implements Screen {
         batch.begin();
         float topButtonY = TOP_THIRD_Y;
 
-// Start Button (oben)
+        // Start Button (oben)
         batch.draw(startButtonIsPressed ? startButtonPressedTexture : startButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
             topButtonY,
@@ -275,5 +279,6 @@ public class MenuScreen implements Screen {
         settingsButtonTexture.dispose();
         settingsButtonPressedTexture.dispose();
         backgroundTexture.dispose();
+        shapeRenderer.dispose();
     }
 }

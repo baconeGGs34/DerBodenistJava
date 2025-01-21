@@ -1,4 +1,4 @@
-#Mon Jan 20 18:23:33 CET 2025
+#Tue Jan 21 09:44:06 CET 2025
 path.4=4/classes.dex
 path.3=2/classes.dex
 path.2=13/classes.dex
@@ -9,20 +9,20 @@ path.7=1/classes.dex
 path.6=0/classes.dex
 path.5=9/classes.dex
 path.0=classes.dex
-base.4=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\4\\classes.dex
-base.3=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\2\\classes.dex
-base.2=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\13\\classes.dex
-base.1=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\10\\classes.dex
-base.0=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.4=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\4\\classes.dex
+base.3=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\2\\classes.dex
+base.2=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\13\\classes.dex
+base.1=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\10\\classes.dex
+base.0=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 renamed.3=classes4.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex
 renamed.7=classes8.dex
-base.8=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\desugar_lib_dex\\debug\\classes1000.dex
+base.8=C\:\\Java\\DBIJ\\android\\build\\intermediates\\desugar_lib_dex\\debug\\classes1000.dex
 renamed.6=classes7.dex
-base.7=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
+base.7=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
 renamed.5=classes6.dex
-base.6=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.6=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 renamed.4=classes5.dex
-base.5=C\:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\9\\classes.dex
+base.5=C\:\\Java\\DBIJ\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\9\\classes.dex

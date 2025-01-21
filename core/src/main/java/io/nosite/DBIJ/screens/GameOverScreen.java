@@ -138,7 +138,7 @@ public class GameOverScreen implements Screen {
         font.getData().setScale(1.5f);
         String highscoreTitle = "HIGHSCORES:";
         glyphLayout.setText(font, highscoreTitle);
-// Ursprüngliche Position war: camera.position.y
+        // Ursprüngliche Position war: camera.position.y
         float highscoreY = camera.position.y + (viewport.getWorldHeight() * 0.2f); // 20% höher
         font.draw(batch, highscoreTitle,
             camera.position.x - glyphLayout.width/2,

@@ -31,6 +31,8 @@ public class PauseScreen implements Screen {
     private static final float BUTTON_SPACING = 50;
     private float backgroundScrollPosition = 0;
     private static final float SCROLL_SPEED = 30f;
+    private static final Color SCORE_COLOR = new Color(1, 1, 0, 1);
+    private GlyphLayout glyphLayout;
 
     private Texture resumeButtonTexture, resumeButtonPressedTexture;
     private Texture settingsButtonTexture, settingsButtonPressedTexture;
@@ -43,9 +45,10 @@ public class PauseScreen implements Screen {
         this.gameScreen = gameScreen;
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(MIN_WORLD_WIDTH, MIN_WORLD_HEIGHT, camera);
-        batch = ((Main)Gdx.app.getApplicationListener()).getBatch();
+        batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         font = FontManager.getFont();
+        this.glyphLayout = new GlyphLayout();
 
         // Texturen laden
         backgroundTexture = new Texture("images/bg.jpg");
@@ -57,7 +60,7 @@ public class PauseScreen implements Screen {
         quitButtonPressedTexture = new Texture("images/buttons/quitbuttonpressed.png");
 
         // Bounds initialisieren
-        float centerX = MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2;
+        float centerX = MIN_WORLD_WIDTH / 2 - BUTTON_WIDTH / 2;
         float topY = MIN_WORLD_HEIGHT * 0.7f;
         resumeBounds = new Rectangle(centerX, topY, BUTTON_WIDTH, BUTTON_HEIGHT);
         settingsBounds = new Rectangle(centerX, topY - BUTTON_HEIGHT - BUTTON_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -78,13 +81,13 @@ public class PauseScreen implements Screen {
         // Scrollender Hintergrund
         batch.begin();
         float bgHeight = backgroundTexture.getHeight();
-        float baseY = camera.position.y - viewport.getWorldHeight()/2;
+        float baseY = camera.position.y - viewport.getWorldHeight() / 2;
         float offsetY = backgroundScrollPosition % bgHeight;
 
-        for(int i = -1; i < 2; i++) {
+        for (int i = -1; i < 2; i++) {
             float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
-                camera.position.x - viewport.getWorldWidth()/2,
+                camera.position.x - viewport.getWorldWidth() / 2,
                 y,
                 viewport.getWorldWidth(),
                 bgHeight);
@@ -96,8 +99,8 @@ public class PauseScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0, 0, 0.5f);
         shapeRenderer.rect(
-            camera.position.x - viewport.getWorldWidth()/2,
-            camera.position.y - viewport.getWorldHeight()/2,
+            camera.position.x - viewport.getWorldWidth() / 2,
+            camera.position.y - viewport.getWorldHeight() / 2,
             viewport.getWorldWidth(),
             viewport.getWorldHeight()
         );
@@ -105,7 +108,19 @@ public class PauseScreen implements Screen {
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin();
-        float centerX = MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2;
+
+        // Überschrift
+        font.getData().setScale(3.0f);
+        font.setColor(SCORE_COLOR);
+        String pausetext = "PAUSE";
+        glyphLayout.setText(font, pausetext);
+        float pauseY = camera.position.y + viewport.getWorldHeight()/2 - 40;
+        font.draw(batch, pausetext,
+            camera.position.x - glyphLayout.width/2,
+            pauseY);
+        font.setColor(Color.WHITE);
+
+        float centerX = MIN_WORLD_WIDTH / 2 - BUTTON_WIDTH / 2;
         float topY = MIN_WORLD_HEIGHT * 0.7f;
 
         // Resume Button
@@ -122,34 +137,34 @@ public class PauseScreen implements Screen {
             BUTTON_WIDTH, BUTTON_HEIGHT);
         batch.end();
 
-        if(Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
-            if(resumeBounds.contains(touchPos.x, touchPos.y)) {
+            if (resumeBounds.contains(touchPos.x, touchPos.y)) {
                 resumePressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(gameScreen);
+                        ((Main) Gdx.app.getApplicationListener()).setScreen(gameScreen);
                     }
                 }, 0.1f);
-            }else if(settingsBounds.contains(touchPos.x, touchPos.y)) {
+            } else if (settingsBounds.contains(touchPos.x, touchPos.y)) {
                 settingsPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(PauseScreen.this, gameScreen));
+                        ((Main) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(PauseScreen.this, gameScreen));
                     }
                 }, 0.1f);
 
-            } else if(quitBounds.contains(touchPos.x, touchPos.y)) {
+            } else if (quitBounds.contains(touchPos.x, touchPos.y)) {
                 quitPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Main) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                     }
                 }, 0.1f);
             }
@@ -174,14 +189,18 @@ public class PauseScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 }

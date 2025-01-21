@@ -83,6 +83,7 @@ public class SettingsScreen implements Screen {
 
     }
     public SettingsScreen(Screen previousScreen, GameScreen gameScreen) {
+        this(); // Ruft den ersten Konstruktor auf
         this.previousScreen = previousScreen;
         this.gameScreen = gameScreen;
     }
@@ -214,12 +215,12 @@ public class SettingsScreen implements Screen {
                 gyroEnabled = !gyroEnabled;
                 prefsManager.setGyroEnabled(gyroEnabled);
                 Gdx.app.log("SettingsScreen", "Gyro enabled: " + gyroEnabled);
-            } else     if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
+            } else if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
                 backButtonPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(previousScreen);
                     }
                 }, 0.1f);
             }

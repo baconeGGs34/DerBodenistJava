@@ -4,17 +4,24 @@
             "outputFile": "io.nosite.DBIJ.android-merged_res-4:/values_values.arsc.flat",
             "map": [
                 {
-                    "source": "C:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\res\\values\\color.xml",
+                    "source": "C:\\Java\\DBIJ\\android\\res\\values\\strings.xml",
                     "from": {
                         "startLines": "2",
+                        "startColumns": "2",
+                        "startOffsets": "53",
+                        "endColumns": "39",
+                        "endOffsets": "90"
+                    },
+                    "to": {
+                        "startLines": "3",
                         "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "55",
-                        "endOffsets": "106"
+                        "startOffsets": "111",
+                        "endColumns": "41",
+                        "endOffsets": "148"
                     }
                 },
                 {
-                    "source": "C:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\res\\values\\styles.xml",
+                    "source": "C:\\Java\\DBIJ\\android\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "1",
                         "startColumns": "4",
@@ -33,20 +40,13 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\sasch\\IdeaProjects\\DBIJ\\android\\res\\values\\strings.xml",
+                    "source": "C:\\Java\\DBIJ\\android\\res\\values\\color.xml",
                     "from": {
                         "startLines": "2",
-                        "startColumns": "2",
-                        "startOffsets": "53",
-                        "endColumns": "39",
-                        "endOffsets": "90"
-                    },
-                    "to": {
-                        "startLines": "3",
                         "startColumns": "4",
-                        "startOffsets": "111",
-                        "endColumns": "41",
-                        "endOffsets": "148"
+                        "startOffsets": "55",
+                        "endColumns": "55",
+                        "endOffsets": "106"
                     }
                 }
             ]
