@@ -12,7 +12,7 @@ public class SoundManager {
     private static boolean soundEnabled = true;
 
     public static void init() {
-        jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump_sound.wav"));
+        jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump_sound2.wav"));
         gameOver = Gdx.audio.newSound(Gdx.files.internal("sounds/game_over.wav"));
         epicMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/epic_music.mp3"));
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game_music.mp3"));

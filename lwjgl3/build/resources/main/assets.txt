@@ -48,3 +48,4 @@ sounds/epic_music.mp3
 sounds/game_music.mp3
 sounds/game_over.wav
 sounds/jump_sound.wav
+sounds/jump_sound2.wav

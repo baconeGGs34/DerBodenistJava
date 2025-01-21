@@ -156,6 +156,7 @@ public class Player {
                     // Für zerbrechliche Plattformen
                     if(platform instanceof BreakablePlatform) {
                         if(((BreakablePlatform) platform).isActive()) {
+                            SoundManager.playJumpSound();
                             position.y = platform.getBounds().y + platform.getBounds().height;
                             velocity.y = JUMP_VELOCITY;
                             ((BreakablePlatform) platform).breakPlatform();
@@ -163,17 +164,16 @@ public class Player {
                             currentFrame = 0;
                             stateTime = 0;
                             isJumping = true;
-                            SoundManager.playJumpSound();
                         }
                     } else {
                         // Normale Plattform-Kollision
+                        SoundManager.playJumpSound();
                         position.y = platform.getBounds().y + platform.getBounds().height;
                         velocity.y = JUMP_VELOCITY;
                         // Animation zurücksetzen
                         currentFrame = 0;
                         stateTime = 0;
                         isJumping = true;
-                        SoundManager.playJumpSound();
                     }
                     break;
                 }
