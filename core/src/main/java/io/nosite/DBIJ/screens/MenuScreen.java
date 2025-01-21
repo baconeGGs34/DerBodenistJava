@@ -159,14 +159,14 @@ public class MenuScreen implements Screen {
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
 
-// Settings Button (mitte)
+        // Settings Button (mitte)
         batch.draw(settingsButtonIsPressed ? settingsButtonPressedTexture : settingsButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
             topButtonY - VERTICAL_SPACING,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
 
-// Quit Button (unten)
+        // Quit Button (unten)
         batch.draw(quitButtonIsPressed ? quitButtonPressedTexture : quitButtonTexture,
             MIN_WORLD_WIDTH/2 - BUTTON_WIDTH/2,
             topButtonY - (2 * VERTICAL_SPACING),
@@ -231,11 +231,10 @@ public class MenuScreen implements Screen {
                     }
                 }, 0.2f);
             } else if (settingsBounds.contains(touchPos.x, touchPos.y)){
-                settingsButtonIsPressed = true;
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        ((Main)Gdx.app.getApplicationListener()).setScreen(new SettingsScreen());
+                        ((Main)Gdx.app.getApplicationListener()).setScreen(new SettingsScreen(MenuScreen.this, null));
                     }
                 }, 0.2f);
             } else if(quitBounds.contains(touchPos.x, touchPos.y)) {

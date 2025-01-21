@@ -34,6 +34,10 @@ images/jump2.png
 images/jump3.png
 images/jump4.png
 images/jump5.png
+images/logos/libgdx128.png
+images/logos/libgdx16.png
+images/logos/libgdx32.png
+images/logos/libgdx64.png
 images/nobuttonpressed.png-autosave.kra
 images/platforms/breakeableplatform.png
 images/platforms/movingplatform.png
