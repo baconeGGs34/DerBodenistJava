@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
-        prefsManager = new PreferencesManager();
+        PreferencesManager prefsManager = PreferencesManager.getInstance();
         font = FontManager.getFont();
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");

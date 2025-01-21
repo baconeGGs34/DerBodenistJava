@@ -5,19 +5,39 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class PreferencesManager {
+
+    public static PreferencesManager instance;
     private static final String PREF_NAME = "GamePreferences";
     private static final String SOUND_ENABLED = "sound_enabled";
     private static final String GYRO_ENABLED = "gyro_enabled";
     private Preferences prefs;
     private static boolean isAndroid;
 
-    public PreferencesManager() {
+
+//    public PreferencesManager() {
+//        instance = this;
+//        prefs = Gdx.app.getPreferences(PREF_NAME);
+//        isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
+//
+//        // Debug output
+//        Gdx.app.log("PreferencesManager", "isAndroid: " + isAndroid);
+//        Gdx.app.log("PreferencesManager", "isGyroEnabled: " + isGyroEnabled());
+//    }
+
+    // Private Konstruktor für Singleton
+    private PreferencesManager() {
         prefs = Gdx.app.getPreferences(PREF_NAME);
         isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
+        Gdx.app.log("PreferencesManager", "Constructor called");
+    }
 
-        // Debug output
-        Gdx.app.log("PreferencesManager", "isAndroid: " + isAndroid);
-        Gdx.app.log("PreferencesManager", "isGyroEnabled: " + isGyroEnabled());
+    // Singleton getInstance Methode
+    public static PreferencesManager getInstance() {
+        if (instance == null) {
+            Gdx.app.log("PreferencesManager", "Creating new instance");
+            instance = new PreferencesManager();
+        }
+        return instance;
     }
 
     public boolean isAndroid() {
@@ -25,12 +45,16 @@ public class PreferencesManager {
     }
 
     public void setSoundEnabled(boolean enabled) {
+        Gdx.app.log("PreferencesManager", "Setting sound enabled to: " + enabled);
         prefs.putBoolean(SOUND_ENABLED, enabled);
         prefs.flush();
+        Gdx.app.log("PreferencesManager", "After saving, sound enabled is: " + prefs.getBoolean(SOUND_ENABLED, true));
     }
 
     public boolean isSoundEnabled() {
-        return prefs.getBoolean(SOUND_ENABLED, true);
+        boolean enabled = prefs.getBoolean(SOUND_ENABLED, true);
+        Gdx.app.log("PreferencesManager", "Checking if sound is enabled: " + enabled);
+        return enabled;
     }
 
     public void setGyroEnabled(boolean enabled) {

@@ -57,7 +57,7 @@ public class SettingsScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         font = FontManager.getFont();
         glyphLayout = new GlyphLayout();
-        prefsManager = new PreferencesManager();
+        PreferencesManager prefsManager = PreferencesManager.getInstance();
         isAndroid = prefsManager.isAndroid();
 
 
@@ -212,7 +212,7 @@ public class SettingsScreen implements Screen {
             if(soundButtonBounds.contains(touchPos.x, touchPos.y)) {
                 soundEnabled = !soundEnabled;
                 SoundManager.setSoundEnabled(soundEnabled);
-                prefsManager.setSoundEnabled(soundEnabled);
+//                prefsManager.setSoundEnabled(soundEnabled);
             } else if(gyroButtonBounds.contains(touchPos.x, touchPos.y) && isAndroid) {
                 gyroEnabled = !gyroEnabled;
                 prefsManager.setGyroEnabled(gyroEnabled);

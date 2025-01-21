@@ -18,9 +18,11 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
+import io.nosite.DBIJ.managers.PreferencesManager;
 import io.nosite.DBIJ.managers.ScoreManager;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class MenuScreen implements Screen {
 
@@ -52,6 +54,7 @@ public class MenuScreen implements Screen {
     private ScoreManager scoreManager;
     private BitmapFont font;
     private ShapeRenderer shapeRenderer;
+    private PreferencesManager prefsManager;
 
 
     public MenuScreen() {
@@ -60,6 +63,7 @@ public class MenuScreen implements Screen {
         batch = ((Main) Gdx.app.getApplicationListener()).getBatch();
         scoreManager = new ScoreManager();
         shapeRenderer = new ShapeRenderer();
+        prefsManager = PreferencesManager.getInstance();
 
         // Rectangles initialisieren
         startBounds = new Rectangle();
@@ -75,6 +79,11 @@ public class MenuScreen implements Screen {
         settingsButtonPressedTexture = new Texture("images/buttons/settingsbuttonpressed.png");
         backgroundTexture = new Texture("images/bg.jpg");
         backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+        // Falls die Epic-Musik noch nicht spielt, starten wir sie hier
+        if (prefsManager.isSoundEnabled()) {
+            SoundManager.playEpicMusic();
+        }
 
 
         startBounds.set(
@@ -101,7 +110,9 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
+        if (prefsManager.isSoundEnabled()) {
+            SoundManager.playEpicMusic();
+        }
     }
 
 
