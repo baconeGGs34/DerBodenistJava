@@ -15,10 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
-import io.nosite.DBIJ.entities.BreakablePlatform;
-import io.nosite.DBIJ.entities.MovingPlatform;
-import io.nosite.DBIJ.entities.Platform;
-import io.nosite.DBIJ.entities.Player;
+import io.nosite.DBIJ.entities.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -73,6 +70,11 @@ public class GameScreen implements Screen {
     private Rectangle pauseButtonBounds;
     private static final float PAUSE_BUTTON_SIZE = 50;  // Größe anpassen nach Bedarf
     private boolean isPaused = false;
+    private Array<PowerUp> powerUps;
+    private static final float POWER_UP_CHANCE = 0.5f; // 5% Chance
+    private static final float JETPACK_DURATION = 2f; // 2 Sekunden
+    private float jetpackTimer = 0;
+    private boolean jetpackActive = false;
 
     @Override
     public void show() {
@@ -84,6 +86,7 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         scoreManager = new ScoreManager();
         font = FontManager.getFont();
+        powerUps = new Array<>();
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
         showTouchControls = prefsManager.isAndroid() && !prefsManager.isGyroEnabled();
@@ -97,6 +100,8 @@ public class GameScreen implements Screen {
         movingplatformTexture = new Texture("images/platforms/movingplatform.png");
 
         wallTexture = new Texture(Gdx.files.internal("images/wallbrick1.png"));
+
+
 
         if (showTouchControls) {
             try {
@@ -287,6 +292,33 @@ public class GameScreen implements Screen {
             }
         }
 
+        if (jetpackActive) {
+            jetpackTimer -= delta;
+            player.setVelocityY(1600); // Starker Aufwärtsschub
+            if (jetpackTimer <= 0) {
+                jetpackActive = false;
+            }
+        }
+
+        // PowerUp Kollisionserkennung
+        for (int i = powerUps.size - 1; i >= 0; i--) {
+            PowerUp powerUp = powerUps.get(i);
+            if (powerUp.isActive() && powerUp.getBounds().overlaps(player.getBounds())) {
+                powerUp.collect();
+                jetpackActive = true;
+                jetpackTimer = JETPACK_DURATION;
+                powerUps.removeIndex(i);
+                SoundManager.playJetPackSound();
+            }
+        }
+
+        // PowerUps rendern
+        batch.begin();
+        for (PowerUp powerUp : powerUps) {
+            powerUp.render(batch);
+        }
+        batch.end();
+
     }
 
 
@@ -340,6 +372,14 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void spawnPowerUp(Platform platform) {
+        if (Math.random() < POWER_UP_CHANCE) {
+            float x = platform.getBounds().x + platform.getBounds().width/2;
+            float y = platform.getBounds().y + platform.getBounds().height;
+            powerUps.add(new PowerUp(x, y, platform));
+        }
+    }
+
     private void resetGame() {
         gameOver = false;
         highscore = 0;
@@ -378,12 +418,21 @@ public class GameScreen implements Screen {
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
 
-        // Alte Plattformen entfernen
+        // Alte Plattformen und PowerUps entfernen
         for (int i = platforms.size - 1; i >= 0; i--) {
             Platform platform = platforms.get(i);
             if (platform.getBounds().y < camera.position.y - viewport.getWorldHeight() ||
                 (platform instanceof BreakablePlatform && !((BreakablePlatform) platform).isActive())) {
                 platforms.removeIndex(i);
+            }
+        }
+
+        // PowerUps aktualisieren und alte entfernen
+        for (int i = powerUps.size - 1; i >= 0; i--) {
+            PowerUp powerUp = powerUps.get(i);
+            powerUp.update();
+            if (powerUp.getBounds().y < camera.position.y - viewport.getWorldHeight()) {
+                powerUps.removeIndex(i);
             }
         }
 
@@ -402,14 +451,23 @@ public class GameScreen implements Screen {
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
 
             int platformType = MathUtils.random(100);
+            Platform newPlatform;
+
             if (platformType < 15) {
-                platforms.add(new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+                newPlatform = new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150));
             } else if (platformType < 30) {
-                platforms.add(new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+                newPlatform = new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(110, 150));
             } else {
-                platforms.add(new Platform(randomX, highestPlatformY + MathUtils.random(110, 150)));
+                newPlatform = new Platform(randomX, highestPlatformY + MathUtils.random(110, 150));
+                // Nur bei normalen Plattformen PowerUp spawnen möglich
+                if (MathUtils.random() < 0.05f) { // 5% Chance
+                    float powerUpX = newPlatform.getBounds().x + newPlatform.getBounds().width/2;
+                    float powerUpY = newPlatform.getBounds().y + newPlatform.getBounds().height;
+                    powerUps.add(new PowerUp(powerUpX, powerUpY, newPlatform));
+                }
             }
 
+            platforms.add(newPlatform);
             highestPlatformY += MathUtils.random(110, 150);
         }
     }
@@ -446,5 +504,8 @@ public class GameScreen implements Screen {
         SoundManager.stopMusic();
         if (leftButtonTexture != null) leftButtonTexture.dispose();
         if (rightButtonTexture != null) rightButtonTexture.dispose();
+        for (PowerUp powerUp : powerUps) {
+            powerUp.dispose();
+        }
     }
 }

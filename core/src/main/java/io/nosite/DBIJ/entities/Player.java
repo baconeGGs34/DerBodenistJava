@@ -49,11 +49,12 @@ public class Player {
                   Rectangle leftButtonBounds, Rectangle rightButtonBounds) {
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
-        this.bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
+//        this.bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
         this.prefsManager = prefsManager;
         this.camera = camera;
         this.leftButtonBounds = leftButtonBounds;
         this.rightButtonBounds = rightButtonBounds;
+        this.bounds = new Rectangle(x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 
 
 
@@ -122,6 +123,7 @@ public class Player {
         }
 
         bounds.setPosition(position.x, position.y);
+        bounds.set(position.x, position.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 
         // Bewegungsrichtung bestimmen
         if (velocity.y > 0) {
@@ -182,6 +184,10 @@ public class Player {
     }
     //endregion
 
+    public void setVelocityY(float velY) {
+        velocity.y = velY;
+    }
+
     public void moveLeft() {
         velocity.x = -MOVEMENT_SPEED;
     }
@@ -207,6 +213,10 @@ public class Player {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public void dispose() {

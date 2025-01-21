@@ -7,6 +7,7 @@ images/IntroImage.webp
 images/bg.jpg
 images/bg2.jpg
 images/bg3.jpg
+images/boost.png
 images/buttons/Pixel Art Buttons.png
 images/buttons/buttonleft.png
 images/buttons/buttonpause.png
@@ -29,6 +30,7 @@ images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
 images/char.png
 images/charjump.png
+images/jetpack.png
 images/jump1.png
 images/jump2.png
 images/jump3.png
@@ -47,5 +49,6 @@ images/wallbrick1.png
 sounds/epic_music.mp3
 sounds/game_music.mp3
 sounds/game_over.wav
+sounds/jetpack_sound.wav
 sounds/jump_sound.wav
 sounds/jump_sound2.wav
