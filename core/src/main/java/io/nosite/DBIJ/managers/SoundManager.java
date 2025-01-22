@@ -146,9 +146,6 @@ public class SoundManager {
         }
     }
 
-    public static boolean isSoundEnabled() {
-        return prefsManager.isSoundEnabled();
-    }
 
     public static void dispose() {
         jumpSound.dispose();
@@ -156,5 +153,6 @@ public class SoundManager {
         gameMusic.dispose();
         gameOver.dispose();
         jetPack.dispose();
+        collectPowerUp.dispose();
     }
 }

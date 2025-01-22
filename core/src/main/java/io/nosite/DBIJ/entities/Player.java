@@ -16,18 +16,13 @@ import io.nosite.DBIJ.managers.SoundManager;
 
 public class Player {
 
-
-    private boolean isAndroid;
     private Vector2 position;     // Aktuelle Position des Spielers
     private Vector2 velocity;     // Geschwindigkeit und Richtung
-    private float width;          // Breite des Spielers für Kollisionen
-    private float height;         // Höhe des Spielers für Kollisionen
     private static final float MIN_WORLD_WIDTH = 480;
     private static final float JUMP_VELOCITY = 1600;    // Wie hoch der Spieler springt
     public static final float MOVEMENT_SPEED = 400;   // Horizontale Bewegungsgeschwindigkeit
     private static final float PLAYER_SIZE = 30;  // Spielergröße in Pixeln
     private Rectangle bounds;  // Für Kollisionserkennung und Zeichnung
-    private ShapeRenderer shapeRenderer;  // Als Klassenvariable
     private Texture spriteSheet;
     private TextureRegion[] jumpAnimation;
     private float stateTime = 0;  // statt animationTimer
@@ -35,8 +30,6 @@ public class Player {
     private static final float FRAME_DURATION = 0.2f;
     private boolean isJumping = true;
     private static final int FRAME_COUNT = 5;  // 5 Frames für die Animation
-    private static final int FRAME_WIDTH = 40;      // Breite eines Sprites
-    private static final int FRAME_HEIGHT = 50;     // Höhe eines Sprites
     private static final float PLAYER_WIDTH = 35;   // Angezeigte Breite
     private static final float PLAYER_HEIGHT = 50;
     private Texture[] jumpTextures;
@@ -51,7 +44,6 @@ public class Player {
                   Rectangle leftButtonBounds, Rectangle rightButtonBounds) {
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
-//        this.bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
         this.prefsManager = prefsManager;
         this.camera = camera;
         this.leftButtonBounds = leftButtonBounds;
@@ -85,7 +77,6 @@ public class Player {
     }
 
 
-    //region Gyro Control
     public void update(float delta, Array<Platform> platforms) {
         // Bewegungssteuerung
         if(prefsManager.isAndroid()) {
@@ -188,20 +179,11 @@ public class Player {
             }
         }
     }
-    //endregion
+
 
     public void setVelocityY(float velY) {
         velocity.y = velY;
     }
-
-    public void moveLeft() {
-        velocity.x = -MOVEMENT_SPEED;
-    }
-
-    public void moveRight() {
-        velocity.x = MOVEMENT_SPEED;
-    }
-
 
     public void render(SpriteBatch batch) {
         // Nur den Effekt rendern wenn das Jetpack aktiv ist
@@ -226,7 +208,6 @@ public class Player {
         jetpackActive = false;
         jetpackEffect.stop();
     }
-
 
     public void setVelocityX(float velX) {
         velocity.x = velX;

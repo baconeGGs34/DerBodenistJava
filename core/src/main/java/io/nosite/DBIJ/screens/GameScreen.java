@@ -44,7 +44,6 @@ public class GameScreen implements Screen {
     private Texture platformTexture;
     private Texture breakableplatformTexture;
     private Texture movingplatformTexture;
-    private TextureRegion backgroundRegion;
     private ScoreManager scoreManager;
     private Texture startButtonTexture;
     private Texture leaveButtonTexture;
@@ -52,18 +51,10 @@ public class GameScreen implements Screen {
     private Texture leftButtonTexture, rightButtonTexture;
     private Rectangle leftButtonBounds, rightButtonBounds;
     private static final float CONTROL_BUTTON_SIZE = 120;
-    private Rectangle startButtonBounds, leaveButtonBounds;
-    private static final float BUTTON_WIDTH = 285;  // 3x Originalgröße wie im Menu
-    private static final float BUTTON_HEIGHT = 90;
-    private static final float BUTTON_SPACING = 50;
     private GlyphLayout glyphLayout = new GlyphLayout();
-    private Texture startButtonPressedTexture;
-    private Texture leaveButtonPressedTexture;
     private boolean startButtonIsPressed = false;
     private boolean leaveButtonIsPressed = false;
     private float backgroundScrollPosition = 0;
-    private static final float SCROLL_SPEED = 30f;
-    private static final Color SCORE_COLOR = new Color(1, 1, 0, 1); // Gelb
     private boolean showTouchControls;
     private Texture pauseButtonTexture;
     private Texture pauseButtonPressedTexture;
@@ -296,6 +287,7 @@ public class GameScreen implements Screen {
             player.setVelocityY(1600); // Starker Aufwärtsschub
             if (jetpackTimer <= 0) {
                 jetpackActive = false;
+                player.stopJetpack();  // Jetpack-Effekt stoppen
             }
         }
 
@@ -310,14 +302,6 @@ public class GameScreen implements Screen {
                 powerUps.removeIndex(i);
                 SoundManager.playPowerUpSound();
                 SoundManager.playJetPackSound();
-
-                // Timer für das Ende des Jetpack-Effekts
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        player.stopJetpack();  // Jetpack-Effekt stoppen
-                    }
-                }, JETPACK_DURATION);
             }
         }
 
@@ -393,7 +377,6 @@ public class GameScreen implements Screen {
         gameOver = false;
         highscore = 0;
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-//        player = new Player(MIN_WORLD_WIDTH / 2, 400,false);
 
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
@@ -506,15 +489,19 @@ public class GameScreen implements Screen {
         shapeRenderer.dispose();
         backgroundTexture.dispose();
         startButtonTexture.dispose();
-        startButtonPressedTexture.dispose();
         leaveButtonTexture.dispose();
-        leaveButtonPressedTexture.dispose();
         wallTexture.dispose();
+        platformTexture.dispose();
+        breakableplatformTexture.dispose();
+        movingplatformTexture.dispose();
+        pauseButtonTexture.dispose();
+        pauseButtonPressedTexture.dispose();
         SoundManager.stopMusic();
         if (leftButtonTexture != null) leftButtonTexture.dispose();
         if (rightButtonTexture != null) rightButtonTexture.dispose();
         for (PowerUp powerUp : powerUps) {
             powerUp.dispose();
         }
+        player.dispose();
     }
 }

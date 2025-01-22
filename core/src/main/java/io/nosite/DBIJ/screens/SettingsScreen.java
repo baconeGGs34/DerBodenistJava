@@ -35,7 +35,6 @@ public class SettingsScreen implements Screen {
     private static final float BUTTON_HEIGHT = 60;
     private static final float BUTTON_BACK_WIDTH = 160;
     private static final float BUTTON_BACK_HEIGHT = 80;
-    private static final float BUTTON_SPACING = 50;
     private Screen previousScreen;
     private GameScreen gameScreen;
 
@@ -44,11 +43,11 @@ public class SettingsScreen implements Screen {
     private Texture gyroButtonOnTexture, gyroButtonOffTexture;
     private Texture backButtonTexture, backButtonPressedTexture;
     private Rectangle soundButtonBounds, gyroButtonBounds, backButtonBounds;
-    private boolean soundButtonPressed, gyroButtonPressed, backButtonPressed;
+    private boolean backButtonPressed;
     private boolean soundEnabled;
-    private boolean gyroEnabled = true;
+    private boolean gyroEnabled;
     private PreferencesManager prefsManager;
-    private boolean isAndroid;  // Als Klassenvariable
+    private boolean isAndroid;
 
 
     public SettingsScreen() {

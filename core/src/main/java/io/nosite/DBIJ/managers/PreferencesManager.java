@@ -13,22 +13,10 @@ public class PreferencesManager {
     private Preferences prefs;
     private static boolean isAndroid;
 
-
-//    public PreferencesManager() {
-//        instance = this;
-//        prefs = Gdx.app.getPreferences(PREF_NAME);
-//        isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
-//
-//        // Debug output
-//        Gdx.app.log("PreferencesManager", "isAndroid: " + isAndroid);
-//        Gdx.app.log("PreferencesManager", "isGyroEnabled: " + isGyroEnabled());
-//    }
-
     // Private Konstruktor für Singleton
     private PreferencesManager() {
         prefs = Gdx.app.getPreferences(PREF_NAME);
         isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
-//        Gdx.app.log("PreferencesManager", "Constructor called");
 
         if (!prefs.contains(SOUND_ENABLED)) {
             prefs.putBoolean(SOUND_ENABLED, true);
