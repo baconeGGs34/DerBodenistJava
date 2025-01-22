@@ -59,10 +59,10 @@ public class GameScreen implements Screen {
     private Texture pauseButtonTexture;
     private Texture pauseButtonPressedTexture;
     private Rectangle pauseButtonBounds;
-    private static final float PAUSE_BUTTON_SIZE = 50;  // Größe anpassen nach Bedarf
+    private static final float PAUSE_BUTTON_SIZE = 50;
     private boolean isPaused = false;
     private Array<PowerUp> powerUps;
-    private static final float POWER_UP_CHANCE = 0.15f;
+    private static final float POWER_UP_CHANCE = 0.05f; // 5% Wahrscheinlichkeit
     private static final float JETPACK_DURATION = 2f; // 2 Sekunden
     private float jetpackTimer = 0;
     private boolean jetpackActive = false;
