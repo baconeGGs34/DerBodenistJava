@@ -14,6 +14,7 @@ public class SoundManager {
     private static Music gameMusic;
     private static Sound gameOver;
     private static Sound jetPack;
+    private static Sound collectPowerUp;
     private static long jetPackSoundId;
     private static boolean soundEnabled = true;
     private static PreferencesManager prefsManager;
@@ -26,8 +27,10 @@ public class SoundManager {
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump_sound2.wav"));
         gameOver = Gdx.audio.newSound(Gdx.files.internal("sounds/game_over.wav"));
         jetPack = Gdx.audio.newSound(Gdx.files.internal("sounds/jetpack_sound.wav"));
+        collectPowerUp = Gdx.audio.newSound(Gdx.files.internal("sounds/power_up_sound.ogg"));
         epicMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/epic_music.mp3"));
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game_music.mp3"));
+
 
         // Musik-Einstellungen
         epicMusic.setLooping(true);
@@ -46,7 +49,15 @@ public class SoundManager {
     public static void playJumpSound() {
         Gdx.app.log("SoundManager", "Attempting to play jump sound. Sound enabled: " + prefsManager.isSoundEnabled());
         if (prefsManager.isSoundEnabled()) {
-            jumpSound.play(0.8f);
+            jumpSound.play(0.6f);
+            Gdx.app.log("SoundManager", "Jump sound played");
+        }
+    }
+
+    public static void playPowerUpSound() {
+        Gdx.app.log("SoundManager", "Attempting to play jump sound. Sound enabled: " + prefsManager.isSoundEnabled());
+        if (prefsManager.isSoundEnabled()) {
+            collectPowerUp.play(0.6f);
             Gdx.app.log("SoundManager", "Jump sound played");
         }
     }

@@ -44,6 +44,8 @@ public class Player {
     private OrthographicCamera camera;
     private Rectangle leftButtonBounds;
     private Rectangle rightButtonBounds;
+    private JetpackEffect jetpackEffect;
+    private boolean jetpackActive;
 
     public Player(float x, float y, PreferencesManager prefsManager, OrthographicCamera camera,
                   Rectangle leftButtonBounds, Rectangle rightButtonBounds) {
@@ -56,7 +58,8 @@ public class Player {
         this.rightButtonBounds = rightButtonBounds;
         this.bounds = new Rectangle(x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 
-
+        jetpackEffect = new JetpackEffect();
+        jetpackActive = false;
 
         jumpTextures = new Texture[FRAME_COUNT];
         for(int i = 0; i < FRAME_COUNT; i++) {
@@ -103,6 +106,9 @@ public class Player {
                     velocity.x = 0;
                 }
             }
+        }
+        if (jetpackActive) {
+            jetpackEffect.update(delta, position.x + PLAYER_WIDTH/2, position.y);
         }
 
         // Schwerkraft auf vertikale Geschwindigkeit anwenden
@@ -196,8 +202,14 @@ public class Player {
         velocity.x = MOVEMENT_SPEED;
     }
 
+
     public void render(SpriteBatch batch) {
-        // Zeichne die aktuelle Textur in der gewünschten Größe
+        // Nur den Effekt rendern wenn das Jetpack aktiv ist
+        if (jetpackActive) {
+            jetpackEffect.render(batch);
+        }
+
+        // Spieler rendern
         batch.draw(jumpTextures[currentFrame],
             position.x,
             position.y,
@@ -205,6 +217,15 @@ public class Player {
             PLAYER_HEIGHT);
     }
 
+    public void startJetpack() {
+        jetpackActive = true;
+        jetpackEffect.start();
+    }
+
+    public void stopJetpack() {
+        jetpackActive = false;
+        jetpackEffect.stop();
+    }
 
 
     public void setVelocityX(float velX) {
@@ -224,6 +245,7 @@ public class Player {
         for(Texture texture : jumpTextures) {
             texture.dispose();
         }
+        jetpackEffect.dispose();
     }
 }
 

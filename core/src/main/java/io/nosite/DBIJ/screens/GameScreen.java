@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
     private Array<Platform> platforms;
     private float highscore = 0;  // Höchste erreichte Position
     private boolean gameOver = false;  // Spielstatus
-    private static final float GAME_OVER_THRESHOLD = 450;  // Wie weit der Spieler fallen darf
+    private static final float GAME_OVER_THRESHOLD = 400;  // Wie weit der Spieler fallen darf
     private ShapeRenderer shapeRenderer;  // Für das Zeichnen von Formen
     private BitmapFont font;
     private Texture backgroundTexture;
@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
     private static final float PAUSE_BUTTON_SIZE = 50;  // Größe anpassen nach Bedarf
     private boolean isPaused = false;
     private Array<PowerUp> powerUps;
-    private static final float POWER_UP_CHANCE = 0.5f; // 5% Chance
+    private static final float POWER_UP_CHANCE = 0.15f;
     private static final float JETPACK_DURATION = 2f; // 2 Sekunden
     private float jetpackTimer = 0;
     private boolean jetpackActive = false;
@@ -100,7 +100,6 @@ public class GameScreen implements Screen {
         movingplatformTexture = new Texture("images/platforms/movingplatform.png");
 
         wallTexture = new Texture(Gdx.files.internal("images/wallbrick1.png"));
-
 
 
         if (showTouchControls) {
@@ -305,10 +304,20 @@ public class GameScreen implements Screen {
             PowerUp powerUp = powerUps.get(i);
             if (powerUp.isActive() && powerUp.getBounds().overlaps(player.getBounds())) {
                 powerUp.collect();
+                player.startJetpack();  // Jetpack-Effekt starten
                 jetpackActive = true;
                 jetpackTimer = JETPACK_DURATION;
                 powerUps.removeIndex(i);
+                SoundManager.playPowerUpSound();
                 SoundManager.playJetPackSound();
+
+                // Timer für das Ende des Jetpack-Effekts
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        player.stopJetpack();  // Jetpack-Effekt stoppen
+                    }
+                }, JETPACK_DURATION);
             }
         }
 
@@ -374,7 +383,7 @@ public class GameScreen implements Screen {
 
     private void spawnPowerUp(Platform platform) {
         if (Math.random() < POWER_UP_CHANCE) {
-            float x = platform.getBounds().x + platform.getBounds().width/2;
+            float x = platform.getBounds().x + platform.getBounds().width / 2;
             float y = platform.getBounds().y + platform.getBounds().height;
             powerUps.add(new PowerUp(x, y, platform));
         }
@@ -460,7 +469,7 @@ public class GameScreen implements Screen {
             } else {
                 newPlatform = new Platform(randomX, highestPlatformY + MathUtils.random(110, 150));
                 // Nur bei normalen Plattformen PowerUp spawnen möglich
-                if (MathUtils.random() < 0.05f) { // 5% Chance
+                if (MathUtils.random() < POWER_UP_CHANCE) {  // Jetzt wird die Konstante verwendet
                     float powerUpX = newPlatform.getBounds().x + newPlatform.getBounds().width/2;
                     float powerUpY = newPlatform.getBounds().y + newPlatform.getBounds().height;
                     powerUps.add(new PowerUp(powerUpX, powerUpY, newPlatform));

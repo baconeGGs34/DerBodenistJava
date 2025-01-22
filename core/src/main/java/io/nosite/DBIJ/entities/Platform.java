@@ -1,8 +1,7 @@
 package io.nosite.DBIJ.entities;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;  // Für Kollisionen
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 
