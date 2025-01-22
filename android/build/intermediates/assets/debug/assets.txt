@@ -7,6 +7,26 @@ images/IntroImage.webp
 images/bg.jpg
 images/bg2.jpg
 images/bg3.jpg
+images/boost.png
+images/boostframes/boost0.png
+images/boostframes/boost1.png
+images/boostframes/boost10.png
+images/boostframes/boost11.png
+images/boostframes/boost12.png
+images/boostframes/boost13.png
+images/boostframes/boost14.png
+images/boostframes/boost15.png
+images/boostframes/boost16.png
+images/boostframes/boost17.png
+images/boostframes/boost17.png-autosave.kra
+images/boostframes/boost2.png
+images/boostframes/boost3.png
+images/boostframes/boost4.png
+images/boostframes/boost5.png
+images/boostframes/boost6.png
+images/boostframes/boost7.png
+images/boostframes/boost8.png
+images/boostframes/boost9.png
 images/buttons/Pixel Art Buttons.png
 images/buttons/buttonleft.png
 images/buttons/buttonpause.png
@@ -29,6 +49,7 @@ images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
 images/char.png
 images/charjump.png
+images/jetpack.png
 images/jump1.png
 images/jump2.png
 images/jump3.png
@@ -47,5 +68,7 @@ images/wallbrick1.png
 sounds/epic_music.mp3
 sounds/game_music.mp3
 sounds/game_over.wav
+sounds/jetpack_sound.wav
 sounds/jump_sound.wav
 sounds/jump_sound2.wav
+sounds/power_up_sound.ogg
