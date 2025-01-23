@@ -66,7 +66,7 @@ public class SettingsScreen implements Screen {
         gyroEnabled = prefsManager.isGyroEnabled();
 
         // Texturen laden
-        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture = new Texture("images/bg2.jpg");
         soundButtonOnTexture = new Texture("images/buttons/onbutton.png");
         soundButtonOffTexture = new Texture("images/buttons/offbutton.png");
         gyroButtonOnTexture = new Texture("images/buttons/onbutton.png");

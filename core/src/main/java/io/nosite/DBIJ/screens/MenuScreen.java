@@ -77,7 +77,7 @@ public class MenuScreen implements Screen {
         quitButtonPressedTexture = new Texture("images/buttons/quitbuttonpressed.png");
         settingsButtonTexture = new Texture("images/buttons/settingsbutton.png");
         settingsButtonPressedTexture = new Texture("images/buttons/settingsbuttonpressed.png");
-        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture = new Texture("images/bg2.jpg");
         backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         // Falls die Epic-Musik noch nicht spielt, starten wir sie hier

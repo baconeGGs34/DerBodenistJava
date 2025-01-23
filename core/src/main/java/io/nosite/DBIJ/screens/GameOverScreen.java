@@ -58,7 +58,7 @@ public class GameOverScreen implements Screen {
         SoundManager.playGameOverSound();
 
         // Lade Texturen
-        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture = new Texture("images/bg2.jpg");
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         startButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");

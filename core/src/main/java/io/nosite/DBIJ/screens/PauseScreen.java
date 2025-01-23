@@ -51,7 +51,7 @@ public class PauseScreen implements Screen {
         this.glyphLayout = new GlyphLayout();
 
         // Texturen laden
-        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture = new Texture("images/bg2.jpg");
         resumeButtonTexture = new Texture("images/buttons/startbutton.png");
         resumeButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
         settingsButtonTexture = new Texture("images/buttons/settingsbutton.png");
