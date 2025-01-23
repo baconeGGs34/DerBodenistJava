@@ -1,81 +1,78 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:2:1-27:12
-MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:2:1-13:12
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:2:1-27:12
+MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\sasch\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:2:1-13:12
 	package
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
 	xmlns:tools
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:3:5-51
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:2:11-69
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:2:11-69
 uses-feature#0x00020000
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:4:3-75
-MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:9:5-11:35
-MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:9:5-11:35
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:4:3-75
+MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\sasch\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:9:5-11:35
+MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\sasch\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:9:5-11:35
 	android:glEsVersion
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:4:17-49
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:4:17-49
 	android:required
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:4:50-73
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:4:50-73
 application
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:5:3-25:17
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml:5:3-25:17
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:5:3-25:17
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:5:3-25:17
 	android:extractNativeLibs
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
 	android:label
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:11:7-39
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:11:7-39
 	android:fullBackupContent
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:7:7-39
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:7:7-39
 	android:appCategory
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:10:7-33
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:10:7-33
 	tools:ignore
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:12:7-37
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:12:7-37
 	android:icon
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:8:7-43
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:8:7-43
 	android:allowBackup
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:6:7-33
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:6:7-33
 	android:theme
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:13:7-38
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:13:7-38
 	android:isGame
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:9:7-28
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:9:7-28
 activity#io.nosite.DBIJ.android.AndroidLauncher
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:14:5-24:16
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:14:5-24:16
 	android:screenOrientation
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:17:9-45
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:17:9-45
 	android:label
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:16:9-41
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:16:9-41
 	android:exported
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:19:9-32
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:19:9-32
 	android:configChanges
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:18:9-103
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:18:9-103
 	android:name
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:15:9-62
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:15:9-62
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:20:9-23:23
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:20:9-23:23
 action#android.intent.action.MAIN
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:21:9-60
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:21:9-60
 	android:name
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:21:17-58
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:21:17-58
 category#android.intent.category.LAUNCHER
-ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:22:9-68
+ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:22:9-68
 	android:name
-		ADDED from C:\Java\DBIJ\android\AndroidManifest.xml:22:19-66
+		ADDED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml:22:19-66
 uses-sdk
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
-INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
-MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
-MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\IT\.gradle\caches\8.11.1\transforms\abec7059a3612d22252a0196fbea5710\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
-MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
-MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\IT\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
+INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
+MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\sasch\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
+MERGED from [com.badlogicgames.gdx:gdx-backend-android:1.12.1] C:\Users\sasch\.gradle\caches\8.11.1\transforms\74ff35036a3898911761478a68934f89\transformed\gdx-backend-android-1.12.1\AndroidManifest.xml:5:5-7:41
 	android:targetSdkVersion
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Java\DBIJ\android\AndroidManifest.xml
+		INJECTED from C:\Users\sasch\IdeaProjects\DBIJ\android\AndroidManifest.xml
