@@ -32,4 +32,4 @@ Ein herausfordernder Arcade/Platformer, entwickelt mit libGDX.
 ## Credits
 
 - Entwickelt mit libGDX
-- Grafiken, Assets, Sounds:
+- Grafiken, Assets, Sounds: tba
