@@ -4,6 +4,7 @@ images/IntroImage.ico
 images/IntroImage.jpg
 images/IntroImage.png
 images/IntroImage.webp
+images/Screenshot Gameplay.png
 images/bg.jpg
 images/bg2.jpg
 images/bg3.jpg
