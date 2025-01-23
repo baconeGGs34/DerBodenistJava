@@ -4,14 +4,6 @@
         "source": "io.nosite.DBIJ.android-android-5:/drawable-hdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-merged_res-4:\\drawable-hdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-android-5:\\drawable-hdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-merged_res-4:\\drawable-xxxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-android-5:\\drawable-xxxhdpi\\ic_launcher.png"
-    },
-    {
         "merged": "io.nosite.DBIJ.android-merged_res-4:/drawable-xxxhdpi_ic_launcher.png.flat",
         "source": "io.nosite.DBIJ.android-android-5:/drawable-xxxhdpi/ic_launcher.png"
     },
@@ -22,18 +14,6 @@
     {
         "merged": "io.nosite.DBIJ.android-merged_res-4:/drawable-mdpi_ic_launcher.png.flat",
         "source": "io.nosite.DBIJ.android-android-5:/drawable-mdpi/ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-merged_res-4:\\drawable-mdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-android-5:\\drawable-mdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-merged_res-4:\\drawable-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-android-5:\\drawable-xxhdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-merged_res-4:\\drawable-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\IT\\.gradle\\daemon\\8.11.1\\io.nosite.DBIJ.android-android-5:\\drawable-xhdpi\\ic_launcher.png"
     },
     {
         "merged": "io.nosite.DBIJ.android-merged_res-4:/drawable-xxhdpi_ic_launcher.png.flat",

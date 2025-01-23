@@ -3,11 +3,9 @@ fonts/ThaleahFat.ttf
 images/IntroImage.ico
 images/IntroImage.jpg
 images/IntroImage.png
-images/IntroImage.webp
-images/bg.jpg
+images/Screenshot Gameplay.png
+images/Screenshot Menu.png
 images/bg2.jpg
-images/bg3.jpg
-images/boost.png
 images/boostframes/boost0.png
 images/boostframes/boost1.png
 images/boostframes/boost10.png
@@ -47,7 +45,6 @@ images/buttons/startbuttonpressed.png
 images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
 images/char.png
-images/charjump.png
 images/jetpack.png
 images/jump1.png
 images/jump2.png
@@ -59,7 +56,6 @@ images/logos/libgdx128.png
 images/logos/libgdx16.png
 images/logos/libgdx32.png
 images/logos/libgdx64.png
-images/nobuttonpressed.png-autosave.kra
 images/platforms/breakeableplatform.png
 images/platforms/movingplatform.png
 images/platforms/platform.png
