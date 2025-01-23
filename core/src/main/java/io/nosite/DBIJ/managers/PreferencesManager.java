@@ -14,7 +14,7 @@ public class PreferencesManager {
     private Preferences prefs;
     private static boolean isAndroid;
 
-    // Private Konstruktor für Singleton
+
     private PreferencesManager() {
         prefs = Gdx.app.getPreferences(PREF_NAME);
         isAndroid = Gdx.app.getType() == Application.ApplicationType.Android;

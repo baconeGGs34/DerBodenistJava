@@ -74,7 +74,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Background Scroll
+
         backgroundScrollPosition += SCROLL_SPEED * delta;
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -156,7 +156,6 @@ public class GameOverScreen implements Screen {
                 highscoreY - ((i + 1) * 40));
         }
 
-        // Buttons im unteren Drittel
         float bottomThirdY = camera.position.y - viewport.getWorldHeight()/3;
 
         batch.draw(startButtonIsPressed ? startButtonPressedTexture : startButtonTexture,

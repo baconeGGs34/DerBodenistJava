@@ -65,16 +65,14 @@ public class SoundManager {
     public static void playJetPackSound() {
         Gdx.app.log("SoundManager", "Attempting to play jetpack sound. Sound enabled: " + prefsManager.isSoundEnabled());
         if (prefsManager.isSoundEnabled()) {
-            // Sound starten und ID speichern
             jetPackSoundId = jetPack.play(1f);
 
-            // Timer, der den Sound nach 2 Sekunden stoppt
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     jetPack.stop(jetPackSoundId);
                 }
-            }, 2f); // 2 Sekunden
+            }, 2f);
 
             Gdx.app.log("SoundManager", "Jetpack sound played");
         }
@@ -113,7 +111,6 @@ public class SoundManager {
             epicMusic.stop();
             gameMusic.stop();
         } else {
-            // Musik wieder starten wenn Sound eingeschaltet wird
             if (Gdx.app.getApplicationListener() instanceof Main) {
                 Screen currentScreen = ((Main)Gdx.app.getApplicationListener()).getScreen();
                 if (currentScreen instanceof GameScreen) {

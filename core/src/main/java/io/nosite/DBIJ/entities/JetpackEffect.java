@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class JetpackEffect {
-    private static final int FRAME_COUNT = 18;  // 0-17 = 18 Frames
+    private static final int FRAME_COUNT = 18;
     private static final float ANIMATION_FRAME_DURATION = 0.05f;
     private Texture[] frames;
     private float stateTime;
@@ -14,7 +14,6 @@ public class JetpackEffect {
 
 
     public JetpackEffect() {
-        // Frames laden
         frames = new Texture[FRAME_COUNT];
         for(int i = 0; i < FRAME_COUNT; i++) {
             frames[i] = new Texture("images/boostframes/boost" + i + ".png");
@@ -32,15 +31,15 @@ public class JetpackEffect {
                 currentFrame = (currentFrame + 1) % FRAME_COUNT;
             }
 
-            // Position unter dem Spieler
-            this.x = playerX - 17;  // Horizontaler Offset für Zentrierung
-            this.y = playerY - 130;   // Vertikaler Offset
+            // Position unter Spieler
+            this.x = playerX - 17;
+            this.y = playerY - 130;
         }
     }
 
     public void render(SpriteBatch batch) {
         if (isActive) {
-            batch.draw(frames[currentFrame], x, y, 35, 150);  // Größe anpassen falls nötig
+            batch.draw(frames[currentFrame], x, y, 35, 150);
         }
     }
 

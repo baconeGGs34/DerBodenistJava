@@ -5,6 +5,7 @@ images/IntroImage.jpg
 images/IntroImage.png
 images/Screenshot Gameplay.png
 images/Screenshot Menu.png
+images/bg.jpg
 images/bg2.jpg
 images/boostframes/boost0.png
 images/boostframes/boost1.png

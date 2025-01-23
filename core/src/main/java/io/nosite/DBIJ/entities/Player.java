@@ -2,12 +2,10 @@ package io.nosite.DBIJ.entities;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,15 +20,15 @@ public class Player {
     private static final float JUMP_VELOCITY = 1600;    // Wie hoch der Spieler springt
     public static final float MOVEMENT_SPEED = 400;   // Horizontale Bewegungsgeschwindigkeit
     private static final float PLAYER_SIZE = 30;  // Spielergröße in Pixeln
-    private Rectangle bounds;  // Für Kollisionserkennung und Zeichnung
+    private Rectangle bounds;
     private Texture spriteSheet;
     private TextureRegion[] jumpAnimation;
-    private float stateTime = 0;  // statt animationTimer
+    private float stateTime = 0;
     private int currentFrame = 0;
     private static final float FRAME_DURATION = 0.2f;
     private boolean isJumping = true;
-    private static final int FRAME_COUNT = 5;  // 5 Frames für die Animation
-    private static final float PLAYER_WIDTH = 35;   // Angezeigte Breite
+    private static final int FRAME_COUNT = 5;
+    private static final float PLAYER_WIDTH = 35;
     private static final float PLAYER_HEIGHT = 50;
     private Texture[] jumpTextures;
     private PreferencesManager prefsManager;
@@ -62,16 +60,15 @@ public class Player {
         spriteSheet = new Texture("images/charjump.png");
         jumpAnimation = new TextureRegion[FRAME_COUNT];
 
-        // Exakte x-Positionen und Breiten für jeden Frame
-        int[] frameX = {0, 32, 64, 96, 128};  // X-Positionen angepasst
-        int[] frameWidths = {32, 32, 32, 32, 32};  // Alle Frames sind etwa 32px breit
+        int[] frameX = {0, 32, 64, 96, 128};
+        int[] frameWidths = {32, 32, 32, 32, 32};
 
         for (int i = 0; i < FRAME_COUNT; i++) {
             jumpAnimation[i] = new TextureRegion(spriteSheet,
-                frameX[i],         // Exakte x-Position für diesen Frame
-                0,                 // y-Position bleibt 0
-                frameWidths[i],    // Individuelle Breite für diesen Frame
-                32                 // Höhe (die Sprites scheinen etwa 32px hoch zu sein)
+                frameX[i],
+                0,
+                frameWidths[i],
+                32
             );
         }
     }
@@ -85,8 +82,6 @@ public class Player {
                 float accelX = Gdx.input.getAccelerometerX();
                 velocity.x = -(accelX / 2.0f) * MOVEMENT_SPEED;
             }
-            // Wenn Gyro nicht aktiviert ist, erfolgt die Steuerung über die Buttons
-            // und wird über moveLeft() und moveRight() gesteuert
         } else {
             if (!prefsManager.isAndroid()) {
                 if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -186,12 +181,12 @@ public class Player {
     }
 
     public void render(SpriteBatch batch) {
-        // Nur den Effekt rendern wenn das Jetpack aktiv ist
+
         if (jetpackActive) {
             jetpackEffect.render(batch);
         }
 
-        // Spieler rendern
+
         batch.draw(jumpTextures[currentFrame],
             position.x,
             position.y,
@@ -222,7 +217,6 @@ public class Player {
     }
 
     public void dispose() {
-        // Alle Texturen aufräumen
         for(Texture texture : jumpTextures) {
             texture.dispose();
         }

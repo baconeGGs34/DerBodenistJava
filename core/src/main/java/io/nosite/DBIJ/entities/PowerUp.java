@@ -11,18 +11,17 @@ public class PowerUp {
     private boolean active;
     private static final float SIZE = 40f;
     private Texture texture;
-    private Platform platform; // Die Plattform, auf der das PowerUp spawnt
+    private Platform platform;
 
     public PowerUp(float x, float y, Platform platform) {
         position = new Vector2(x, y);
         bounds = new Rectangle(x, y, SIZE, SIZE);
         active = true;
         this.platform = platform;
-        texture = new Texture("images/jetpack.png"); // Erstellen Sie ein passendes Bild
+        texture = new Texture("images/jetpack.png");
     }
 
     public void update() {
-        // Position auf der Plattform aktualisieren
         position.x = platform.getBounds().x + platform.getBounds().width/2 - SIZE/2;
         position.y = platform.getBounds().y + platform.getBounds().height;
         bounds.setPosition(position.x, position.y);
