@@ -1,7 +1,7 @@
 package io.nosite.DBIJ.entities;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
@@ -9,36 +9,47 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.nosite.DBIJ.managers.PreferencesManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class Player {
 
     private Vector2 position;     // Aktuelle Position des Spielers
     private Vector2 velocity;     // Geschwindigkeit und Richtung
-    private float width;          // Breite des Spielers für Kollisionen
-    private float height;         // Höhe des Spielers für Kollisionen
     private static final float MIN_WORLD_WIDTH = 480;
     private static final float JUMP_VELOCITY = 1600;    // Wie hoch der Spieler springt
-    private static final float MOVEMENT_SPEED = 400;   // Horizontale Bewegungsgeschwindigkeit
+    public static final float MOVEMENT_SPEED = 400;   // Horizontale Bewegungsgeschwindigkeit
     private static final float PLAYER_SIZE = 30;  // Spielergröße in Pixeln
-    private Rectangle bounds;  // Für Kollisionserkennung und Zeichnung
-    private ShapeRenderer shapeRenderer;  // Als Klassenvariable
+    private Rectangle bounds;
     private Texture spriteSheet;
     private TextureRegion[] jumpAnimation;
-    private float stateTime = 0;  // statt animationTimer
+    private float stateTime = 0;
     private int currentFrame = 0;
     private static final float FRAME_DURATION = 0.2f;
     private boolean isJumping = true;
-    private static final int FRAME_COUNT = 5;  // 5 Frames für die Animation
-    private static final int FRAME_WIDTH = 40;      // Breite eines Sprites
-    private static final int FRAME_HEIGHT = 50;     // Höhe eines Sprites
-    private static final float PLAYER_WIDTH = 35;   // Angezeigte Breite
+    private static final int FRAME_COUNT = 5;
+    private static final float PLAYER_WIDTH = 35;
     private static final float PLAYER_HEIGHT = 50;
     private Texture[] jumpTextures;
+    private PreferencesManager prefsManager;
+    private OrthographicCamera camera;
+    private Rectangle leftButtonBounds;
+    private Rectangle rightButtonBounds;
+    private JetpackEffect jetpackEffect;
+    private boolean jetpackActive;
 
-    public Player(float x, float y) {
-        position = new Vector2(x, y);
-        velocity = new Vector2();
-        bounds = new Rectangle(x, y, PLAYER_SIZE, PLAYER_SIZE);
+    public Player(float x, float y, PreferencesManager prefsManager, OrthographicCamera camera,
+                  Rectangle leftButtonBounds, Rectangle rightButtonBounds) {
+        this.position = new Vector2(x, y);
+        this.velocity = new Vector2();
+        this.prefsManager = prefsManager;
+        this.camera = camera;
+        this.leftButtonBounds = leftButtonBounds;
+        this.rightButtonBounds = rightButtonBounds;
+        this.bounds = new Rectangle(x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+
+        jetpackEffect = new JetpackEffect();
+        jetpackActive = false;
 
         jumpTextures = new Texture[FRAME_COUNT];
         for(int i = 0; i < FRAME_COUNT; i++) {
@@ -49,32 +60,41 @@ public class Player {
         spriteSheet = new Texture("images/charjump.png");
         jumpAnimation = new TextureRegion[FRAME_COUNT];
 
-        // Exakte x-Positionen und Breiten für jeden Frame
-        int[] frameX = {0, 32, 64, 96, 128};  // X-Positionen angepasst
-        int[] frameWidths = {32, 32, 32, 32, 32};  // Alle Frames sind etwa 32px breit
+        int[] frameX = {0, 32, 64, 96, 128};
+        int[] frameWidths = {32, 32, 32, 32, 32};
 
         for (int i = 0; i < FRAME_COUNT; i++) {
             jumpAnimation[i] = new TextureRegion(spriteSheet,
-                frameX[i],         // Exakte x-Position für diesen Frame
-                0,                 // y-Position bleibt 0
-                frameWidths[i],    // Individuelle Breite für diesen Frame
-                32                 // Höhe (die Sprites scheinen etwa 32px hoch zu sein)
+                frameX[i],
+                0,
+                frameWidths[i],
+                32
             );
         }
     }
 
-    public Vector2 getPosition() {
-        return position;
-    }
 
     public void update(float delta, Array<Platform> platforms) {
-        // Horizontale Bewegung durch Tastatur
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-            velocity.x = -MOVEMENT_SPEED;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            velocity.x = MOVEMENT_SPEED;
+        // Bewegungssteuerung
+        if(prefsManager.isAndroid()) {
+            if(prefsManager.isGyroEnabled()) {
+                // Gyro Steuerung
+                float accelX = Gdx.input.getAccelerometerX();
+                velocity.x = -(accelX / 2.0f) * MOVEMENT_SPEED;
+            }
         } else {
-            velocity.x = 0;
+            if (!prefsManager.isAndroid()) {
+                if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    velocity.x = -MOVEMENT_SPEED;
+                } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    velocity.x = MOVEMENT_SPEED;
+                } else {
+                    velocity.x = 0;
+                }
+            }
+        }
+        if (jetpackActive) {
+            jetpackEffect.update(delta, position.x + PLAYER_WIDTH/2, position.y);
         }
 
         // Schwerkraft auf vertikale Geschwindigkeit anwenden
@@ -95,6 +115,7 @@ public class Player {
         }
 
         bounds.setPosition(position.x, position.y);
+        bounds.set(position.x, position.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 
         // Bewegungsrichtung bestimmen
         if (velocity.y > 0) {
@@ -129,6 +150,7 @@ public class Player {
                     // Für zerbrechliche Plattformen
                     if(platform instanceof BreakablePlatform) {
                         if(((BreakablePlatform) platform).isActive()) {
+                            SoundManager.playJumpSound();
                             position.y = platform.getBounds().y + platform.getBounds().height;
                             velocity.y = JUMP_VELOCITY;
                             ((BreakablePlatform) platform).breakPlatform();
@@ -139,6 +161,7 @@ public class Player {
                         }
                     } else {
                         // Normale Plattform-Kollision
+                        SoundManager.playJumpSound();
                         position.y = platform.getBounds().y + platform.getBounds().height;
                         velocity.y = JUMP_VELOCITY;
                         // Animation zurücksetzen
@@ -152,8 +175,18 @@ public class Player {
         }
     }
 
+
+    public void setVelocityY(float velY) {
+        velocity.y = velY;
+    }
+
     public void render(SpriteBatch batch) {
-        // Zeichne die aktuelle Textur in der gewünschten Größe
+
+        if (jetpackActive) {
+            jetpackEffect.render(batch);
+        }
+
+
         batch.draw(jumpTextures[currentFrame],
             position.x,
             position.y,
@@ -161,11 +194,33 @@ public class Player {
             PLAYER_HEIGHT);
     }
 
+    public void startJetpack() {
+        jetpackActive = true;
+        jetpackEffect.start();
+    }
+
+    public void stopJetpack() {
+        jetpackActive = false;
+        jetpackEffect.stop();
+    }
+
+    public void setVelocityX(float velX) {
+        velocity.x = velX;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
     public void dispose() {
-        // Alle Texturen aufräumen
         for(Texture texture : jumpTextures) {
             texture.dispose();
         }
+        jetpackEffect.dispose();
     }
 }
 

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.nosite.DBIJ.Main;
 import io.nosite.DBIJ.managers.FontManager;
 import io.nosite.DBIJ.managers.ScoreManager;
+import io.nosite.DBIJ.managers.SoundManager;
 
 public class GameOverScreen implements Screen {
     private final int finalScore;
@@ -54,9 +55,10 @@ public class GameOverScreen implements Screen {
         this.shapeRenderer = new ShapeRenderer();
         this.scoreManager = new ScoreManager();
         this.font = FontManager.getFont();
+        SoundManager.playGameOverSound();
 
         // Lade Texturen
-        backgroundTexture = new Texture("images/bg.jpg");
+        backgroundTexture = new Texture("images/bg2.jpg");
         startButtonTexture = new Texture("images/buttons/startbutton.png");
         startButtonPressedTexture = new Texture("images/buttons/startbuttonpressed.png");
         leaveButtonTexture = new Texture("images/buttons/leavebutton.png");
@@ -72,7 +74,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Background Scroll
+
         backgroundScrollPosition += SCROLL_SPEED * delta;
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -138,7 +140,7 @@ public class GameOverScreen implements Screen {
         font.getData().setScale(1.5f);
         String highscoreTitle = "HIGHSCORES:";
         glyphLayout.setText(font, highscoreTitle);
-// Ursprüngliche Position war: camera.position.y
+        // Ursprüngliche Position war: camera.position.y
         float highscoreY = camera.position.y + (viewport.getWorldHeight() * 0.2f); // 20% höher
         font.draw(batch, highscoreTitle,
             camera.position.x - glyphLayout.width/2,
@@ -154,7 +156,6 @@ public class GameOverScreen implements Screen {
                 highscoreY - ((i + 1) * 40));
         }
 
-        // Buttons im unteren Drittel
         float bottomThirdY = camera.position.y - viewport.getWorldHeight()/3;
 
         batch.draw(startButtonIsPressed ? startButtonPressedTexture : startButtonTexture,
