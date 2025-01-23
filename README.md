@@ -1,5 +1,5 @@
 # Der Boden ist Java
-<img height="150" src="C:\Java\DBIJ\assets\images\IntroImage.jpg" width="150"/><br>
+<img height="150" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/IntroImage.jpg" width="150"/><br>
 <img height="250" src="C:\Java\DBIJ\assets\images\Screenshot Gameplay.png" width="150"/>
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
