@@ -46,6 +46,7 @@ images/buttons/startbuttonpressed.png
 images/buttons/yesbutton.png
 images/buttons/yesbuttonpressed.png
 images/char.png
+images/charjump.png
 images/jetpack.png
 images/jump1.png
 images/jump2.png
