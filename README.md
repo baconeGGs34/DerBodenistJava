@@ -1,13 +1,10 @@
 # Der Boden ist Java
-<img height="450" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Gameplay.png" width="250"/>
-<img height="450" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Menu.png" width="250"/>
+<img height="450" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Gameplay.png" width="250"/><img height="450" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Menu.png" width="250"/>
 <img height="250" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/IntroImage.jpg" width="250"/>
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
 Ein herausfordernder Arcade/Platformer, entwickelt mit libGDX.
-
-
 
 ## Features
 
