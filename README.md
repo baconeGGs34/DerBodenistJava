@@ -1,6 +1,6 @@
 # Der Boden ist Java
-<img height="150" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/IntroImage.jpg" width="150"/><br>
-<img height="250" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Gameplay.png" width="150"/>
+<img height="450" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/Screenshot%20Gameplay.png" width="250"/><br>
+<img height="150" src="https://github.com/baconeGGs34/DBIJ/blob/main/assets/images/IntroImage.jpg" width="150"/>
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
