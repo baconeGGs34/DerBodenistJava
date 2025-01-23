@@ -18,7 +18,6 @@ images/boostframes/boost14.png
 images/boostframes/boost15.png
 images/boostframes/boost16.png
 images/boostframes/boost17.png
-images/boostframes/boost17.png-autosave.kra
 images/boostframes/boost2.png
 images/boostframes/boost3.png
 images/boostframes/boost4.png
