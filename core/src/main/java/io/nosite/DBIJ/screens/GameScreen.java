@@ -66,6 +66,10 @@ public class GameScreen implements Screen {
     private static final float JETPACK_DURATION = 2f; // 2 Sekunden
     private float jetpackTimer = 0;
     private boolean jetpackActive = false;
+    private static final float POWER_UP_CHANCE_NORMAL = 0.03f;
+    private static final float POWER_UP_CHANCE_EASY = 0.04f;
+    private static final float PLATFORM_SPACING_NORMAL = 150f;
+    private static final float PLATFORM_SPACING_EASY = 75f;
 
     @Override
     public void show() {
@@ -118,6 +122,7 @@ public class GameScreen implements Screen {
 
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
+        float platformSpacing = prefsManager.isEasyMode() ? PLATFORM_SPACING_EASY : PLATFORM_SPACING_NORMAL;
 
         platforms = new Array<>();
         platforms.add(new Platform(MIN_WORLD_WIDTH / 2 - 35, 200));
@@ -131,15 +136,15 @@ public class GameScreen implements Screen {
             float randomX = margin + (randomSection * sectionWidth) + randomOffset;
             int platformType = MathUtils.random(100);
 
-            if (platformType < 15) {  // 15% Chance für bewegende Plattform
+            if (platformType < 15) {
                 platforms.add(new MovingPlatform(randomX, nextY));
-            } else if (platformType < 30) {  // 15% Chance für zerbrechliche Plattform
+            } else if (platformType < 30) {
                 platforms.add(new BreakablePlatform(randomX, nextY));
-            } else {  // 70% Chance für normale Plattform
+            } else {
                 platforms.add(new Platform(randomX, nextY));
             }
 
-            nextY += MathUtils.random(110, 150);
+            nextY += MathUtils.random(platformSpacing * 0.7f, platformSpacing);
         }
     }
 
@@ -409,6 +414,8 @@ public class GameScreen implements Screen {
     private void updatePlatforms() {
         float margin = 40f;
         float platformSpawnAreaWidth = MIN_WORLD_WIDTH - (2 * margin) - 70;
+        float platformSpacing = prefsManager.isEasyMode() ? PLATFORM_SPACING_EASY : PLATFORM_SPACING_NORMAL;
+        float powerUpChance = prefsManager.isEasyMode() ? POWER_UP_CHANCE_EASY : POWER_UP_CHANCE_NORMAL;
 
         // Alte Plattformen und PowerUps entfernen
         for (int i = platforms.size - 1; i >= 0; i--) {
@@ -446,13 +453,12 @@ public class GameScreen implements Screen {
             Platform newPlatform;
 
             if (platformType < 15) {
-                newPlatform = new MovingPlatform(randomX, highestPlatformY + MathUtils.random(110, 150));
+                newPlatform = new MovingPlatform(randomX, highestPlatformY + MathUtils.random(platformSpacing * 0.7f, platformSpacing));
             } else if (platformType < 30) {
-                newPlatform = new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(110, 150));
+                newPlatform = new BreakablePlatform(randomX, highestPlatformY + MathUtils.random(platformSpacing * 0.7f, platformSpacing));
             } else {
-                newPlatform = new Platform(randomX, highestPlatformY + MathUtils.random(110, 150));
-                // Nur bei normalen Plattformen PowerUp spawnen möglich
-                if (MathUtils.random() < POWER_UP_CHANCE) {  // Jetzt wird die Konstante verwendet
+                newPlatform = new Platform(randomX, highestPlatformY + MathUtils.random(platformSpacing * 0.7f, platformSpacing));
+                if (MathUtils.random() < powerUpChance) {
                     float powerUpX = newPlatform.getBounds().x + newPlatform.getBounds().width/2;
                     float powerUpY = newPlatform.getBounds().y + newPlatform.getBounds().height;
                     powerUps.add(new PowerUp(powerUpX, powerUpY, newPlatform));
@@ -460,7 +466,7 @@ public class GameScreen implements Screen {
             }
 
             platforms.add(newPlatform);
-            highestPlatformY += MathUtils.random(110, 150);
+            highestPlatformY += MathUtils.random(platformSpacing * 0.7f, platformSpacing);
         }
     }
 

@@ -37,6 +37,9 @@ public class SettingsScreen implements Screen {
     private static final float BUTTON_BACK_HEIGHT = 80;
     private Screen previousScreen;
     private GameScreen gameScreen;
+    private Texture difficultyButtonOnTexture, difficultyButtonOffTexture;
+    private Rectangle difficultyButtonBounds;
+    private boolean difficultyEnabled;
 
     // Buttons
     private Texture soundButtonOnTexture, soundButtonOffTexture;
@@ -60,8 +63,6 @@ public class SettingsScreen implements Screen {
         prefsManager = PreferencesManager.getInstance();
         soundEnabled = prefsManager.isSoundEnabled();
         isAndroid = prefsManager.isAndroid();
-
-
         gyroEnabled = prefsManager.isGyroEnabled();
 
         // Texturen laden
@@ -72,17 +73,16 @@ public class SettingsScreen implements Screen {
         gyroButtonOffTexture = new Texture("images/buttons/offbutton.png");
         backButtonTexture = new Texture("images/buttons/leavebutton.png");
         backButtonPressedTexture = new Texture("images/buttons/leavebuttonpressed.png");
-
+        difficultyButtonOnTexture = new Texture("images/buttons/onbutton.png");
+        difficultyButtonOffTexture = new Texture("images/buttons/offbutton.png");
+        difficultyEnabled = prefsManager.isEasyMode();
 
         // Button-Bereiche initialisieren
         float centerX = MIN_WORLD_WIDTH / 2 - BUTTON_WIDTH / 2;
-        // Sound Button mittig im oberen Drittel
         soundButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.6f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        // Gyro Button mittig
         gyroButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.4f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        // Back Button wird in render() positioniert
+        difficultyButtonBounds = new Rectangle(centerX, MIN_WORLD_HEIGHT * 0.2f, BUTTON_WIDTH, BUTTON_HEIGHT);
         backButtonBounds = new Rectangle();
-
     }
     public SettingsScreen(Screen previousScreen, GameScreen gameScreen) {
         this(); // Ruft den ersten Konstruktor auf
@@ -96,7 +96,6 @@ public class SettingsScreen implements Screen {
         // Background Scroll
         backgroundScrollPosition += SCROLL_SPEED * delta;
 
-        // Screen clearen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -111,10 +110,9 @@ public class SettingsScreen implements Screen {
         float offsetY = backgroundScrollPosition % bgHeight;
 
         for (int i = -1; i < 2; i++) {
-            float y = baseY - offsetY + (i * bgHeight);
             batch.draw(backgroundTexture,
                 camera.position.x - viewport.getWorldWidth() / 2,
-                y,
+                baseY - offsetY + (i * bgHeight),
                 viewport.getWorldWidth(),
                 bgHeight);
         }
@@ -133,7 +131,6 @@ public class SettingsScreen implements Screen {
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // Text und Buttons in einem einzigen batch
         batch.begin();
 
         // Überschrift "Settings"
@@ -143,7 +140,7 @@ public class SettingsScreen implements Screen {
             camera.position.x - glyphLayout.width / 2,
             camera.position.y + viewport.getWorldHeight() / 2 - 50);
 
-        // Sound Text und Labels
+        // Sound Settings
         font.getData().setScale(2.0f);
         glyphLayout.setText(font, "SOUND");
         font.draw(batch, "SOUND",
@@ -151,14 +148,10 @@ public class SettingsScreen implements Screen {
             soundButtonBounds.y + BUTTON_HEIGHT + 50);
 
         font.getData().setScale(1.4f);
-        font.draw(batch, "ON",
-            soundButtonBounds.x - 50,
-            soundButtonBounds.y + BUTTON_HEIGHT / 2);
-        font.draw(batch, "OFF",
-            soundButtonBounds.x + BUTTON_WIDTH + 20,
-            soundButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "ON", soundButtonBounds.x - 50, soundButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "OFF", soundButtonBounds.x + BUTTON_WIDTH + 20, soundButtonBounds.y + BUTTON_HEIGHT / 2);
 
-        // Gyro Text und Labels
+        // Controls Settings
         font.getData().setScale(2.0f);
         glyphLayout.setText(font, "Controls");
         font.draw(batch, "Controls",
@@ -166,37 +159,45 @@ public class SettingsScreen implements Screen {
             gyroButtonBounds.y + BUTTON_HEIGHT + 50);
 
         font.getData().setScale(1.4f);
-        font.draw(batch, "Gyro",
-            gyroButtonBounds.x - 85,
-            gyroButtonBounds.y + BUTTON_HEIGHT / 2);
-        font.draw(batch, "Buttons",
-            gyroButtonBounds.x + BUTTON_WIDTH + 20,
-            gyroButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "Gyro", gyroButtonBounds.x - 85, gyroButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "Buttons", gyroButtonBounds.x + BUTTON_WIDTH + 20, gyroButtonBounds.y + BUTTON_HEIGHT / 2);
 
-        // Sound Button
+        // Difficulty Settings
+        font.getData().setScale(2.0f);
+        glyphLayout.setText(font, "DIFFICULTY");
+        font.draw(batch, "DIFFICULTY",
+            camera.position.x - glyphLayout.width / 2,
+            difficultyButtonBounds.y + BUTTON_HEIGHT + 50);
+
+        font.getData().setScale(1.4f);
+        font.draw(batch, "EASY", difficultyButtonBounds.x - 85, difficultyButtonBounds.y + BUTTON_HEIGHT / 2);
+        font.draw(batch, "NORMAL", difficultyButtonBounds.x + BUTTON_WIDTH + 20, difficultyButtonBounds.y + BUTTON_HEIGHT / 2);
+
+        // Buttons zeichnen
         batch.draw(soundEnabled ? soundButtonOnTexture : soundButtonOffTexture,
             soundButtonBounds.x, soundButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        // Gyro Button
         if(!isAndroid) {
-            batch.setColor(0.5f, 0.5f, 0.5f, 1f);  // Grau für Desktop
+            batch.setColor(0.5f, 0.5f, 0.5f, 1f);
         }
         batch.draw(gyroEnabled ? gyroButtonOnTexture : gyroButtonOffTexture,
             gyroButtonBounds.x, gyroButtonBounds.y,
             BUTTON_WIDTH, BUTTON_HEIGHT);
         if(!isAndroid) {
-            batch.setColor(Color.WHITE);  // Farbe zurücksetzen
+            batch.setColor(Color.WHITE);
         }
 
-        // Back Button
+        batch.draw(difficultyEnabled ? difficultyButtonOnTexture : difficultyButtonOffTexture,
+            difficultyButtonBounds.x, difficultyButtonBounds.y,
+            BUTTON_WIDTH, BUTTON_HEIGHT);
+
         batch.draw(backButtonPressed ? backButtonPressedTexture : backButtonTexture,
             backButtonBounds.x, backButtonBounds.y,
             BUTTON_BACK_WIDTH, BUTTON_BACK_HEIGHT);
 
         batch.end();
 
-        // Back Button Bounds aktualisieren
         backButtonBounds.set(
             camera.position.x - BUTTON_BACK_WIDTH / 2,
             camera.position.y - viewport.getWorldHeight() / 2 + 50,
@@ -204,7 +205,6 @@ public class SettingsScreen implements Screen {
             BUTTON_BACK_HEIGHT
         );
 
-        // Klick-Erkennung
         if(Gdx.input.justTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -219,6 +219,10 @@ public class SettingsScreen implements Screen {
                 gyroEnabled = !gyroEnabled;
                 prefsManager.setGyroEnabled(gyroEnabled);
                 Gdx.app.log("SettingsScreen", "Gyro enabled: " + gyroEnabled);
+            } else if(difficultyButtonBounds.contains(touchPos.x, touchPos.y)) {
+                difficultyEnabled = !difficultyEnabled;
+                prefsManager.setEasyMode(difficultyEnabled);
+                Gdx.app.log("SettingsScreen", "Difficulty set to easy: " + difficultyEnabled);
             } else if(backButtonBounds.contains(touchPos.x, touchPos.y)) {
                 backButtonPressed = true;
                 Timer.schedule(new Timer.Task() {
@@ -246,6 +250,8 @@ public class SettingsScreen implements Screen {
         gyroButtonOffTexture.dispose();
         backButtonTexture.dispose();
         backButtonPressedTexture.dispose();
+        difficultyButtonOnTexture.dispose();
+        difficultyButtonOffTexture.dispose();
     }
 
     @Override

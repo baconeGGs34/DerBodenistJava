@@ -7,6 +7,7 @@ import com.badlogic.gdx.Preferences;
 public class PreferencesManager {
 
     public static PreferencesManager instance;
+    private static final String EASY_MODE = "easy_mode";
     private static final String PREF_NAME = "GamePreferences";
     private static final String SOUND_ENABLED = "sound_enabled";
     private static final String GYRO_ENABLED = "gyro_enabled";
@@ -61,5 +62,14 @@ public class PreferencesManager {
         boolean value = prefs.getBoolean(GYRO_ENABLED, true);  // Default auf Gyro
         Gdx.app.log("PreferencesManager", "Gyro setting loaded: " + value);
         return value;
+    }
+
+    public void setEasyMode(boolean enabled) {
+        prefs.putBoolean(EASY_MODE, enabled);
+        prefs.flush();
+    }
+
+    public boolean isEasyMode() {
+        return prefs.getBoolean(EASY_MODE, false);
     }
 }
