@@ -83,7 +83,7 @@ public class Player {
             if(prefsManager.isGyroEnabled()) {
                 // Gyro Steuerung
                 float accelX = Gdx.input.getAccelerometerX();
-                velocity.x = -(accelX / 10.0f) * MOVEMENT_SPEED;
+                velocity.x = -(accelX / 20.0f) * MOVEMENT_SPEED;
             }
             // Wenn Gyro nicht aktiviert ist, erfolgt die Steuerung über die Buttons
             // und wird über moveLeft() und moveRight() gesteuert
